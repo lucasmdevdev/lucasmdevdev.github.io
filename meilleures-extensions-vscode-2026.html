@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Les meilleures extensions VS Code en 2026 : ma sélection — LucasMdev</title>
+  <meta name="description" content="Ma sélection des meilleures extensions VS Code en 2026 : productivité, IA, git, debug. Des extensions testées au quotidien que j'utilise vraiment.">
+  <meta name="author" content="Lucas M.">
+  <meta property="og:title" content="Les meilleures extensions VS Code en 2026 : ma sélection">
+  <meta property="og:type" content="article">
+  <link rel="canonical" href="https://lucasmdevdev.github.io/meilleures-extensions-vscode-2026.html">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">Lucas<span>M</span>.dev</a>
+    <nav>
+      <a href="/">Blog</a>
+      <a href="mailto:lucasmdev@proton.me">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <a href="/" class="back-link">← Retour au blog</a>
+
+  <article>
+    <header class="article-header">
+      <div class="meta">
+        <span>VS Code</span>
+        <span>Dev Tools</span>
+        28 mars 2026 · 5 min de lecture
+      </div>
+      <h1>Les meilleures extensions VS Code en 2026 : ma sélection</h1>
+      <p class="intro">VS Code reste l'IDE le plus utilisé au monde. Sa puissance vient en grande partie de son écosystème d'extensions. Voici celles que j'utilise vraiment au quotidien — pas de bloat, que des outils qui font gagner du temps.</p>
+    </header>
+
+    <div class="article-content">
+
+      <h2>Extensions IA — Indispensables en 2026</h2>
+
+      <h3>1. Codeium (gratuit)</h3>
+      <p>La meilleure alternative gratuite à GitHub Copilot. Complétion multi-lignes, chat, et maintenant "Cascade" (agent autonome). Aucune limite artificielle sur le plan gratuit pour les individus.</p>
+      <p><strong>Installer :</strong> <code>ext install Codeium.codeium</code></p>
+
+      <h3>2. Continue (gratuit, open-source)</h3>
+      <p>Un copilote IA open-source qui se connecte à n'importe quel modèle : Claude, GPT-4, Ollama local, Mistral. Parfait pour ceux qui veulent garder le contrôle sur quel modèle ils utilisent.</p>
+      <p><strong>Installer :</strong> <code>ext install Continue.continue</code></p>
+
+      <hr>
+
+      <h2>Git — Ne jamais toucher à la ligne de commande</h2>
+
+      <h3>3. GitLens</h3>
+      <p>Le meilleur outil Git pour VS Code. Blame inline, historique visuel, comparaison de branches. La version gratuite est très complète.</p>
+      <p><strong>Installer :</strong> <code>ext install eamodio.gitlens</code></p>
+
+      <h3>4. Git Graph</h3>
+      <p>Visualisation du graph de commits en arbre. Simple, performant, essentiel pour comprendre l'historique d'un projet complexe.</p>
+      <p><strong>Installer :</strong> <code>ext install mhutchie.git-graph</code></p>
+
+      <hr>
+
+      <h2>Qualité de code</h2>
+
+      <h3>5. ESLint / Prettier</h3>
+      <p>Incontournables pour JavaScript/TypeScript. Configurez-les une fois, oubliez le formatage pour toujours.</p>
+      <pre><code>ext install dbaeumer.vscode-eslint
+ext install esbenp.prettier-vscode</code></pre>
+
+      <h3>6. Error Lens</h3>
+      <p>Affiche les erreurs et warnings directement sur la ligne de code, sans avoir à aller dans le panneau "Problèmes". Change complètement la façon de débugger.</p>
+      <p><strong>Installer :</strong> <code>ext install usernamehw.errorlens</code></p>
+
+      <hr>
+
+      <h2>Productivité générale</h2>
+
+      <h3>7. TODO Highlight</h3>
+      <p>Colore les TODO, FIXME, HACK dans votre code. Pratique pour retrouver rapidement les notes laissées en cours de dev.</p>
+
+      <h3>8. Path Intellisense</h3>
+      <p>Autocomplétion des chemins de fichiers dans vos imports. Indispensable dès qu'on travaille sur un projet avec une structure de fichiers complexe.</p>
+
+      <h3>9. Remote - SSH</h3>
+      <p>Éditez des fichiers sur un serveur distant directement dans VS Code, comme si c'était en local. Terminal intégré, intellisense, tout fonctionne à distance.</p>
+      <p><strong>Installer :</strong> <code>ext install ms-vscode-remote.remote-ssh</code></p>
+
+      <h3>10. Docker</h3>
+      <p>Interface graphique pour gérer vos containers Docker directement dans VS Code. Voir les logs, arrêter/démarrer des services — sans jamais quitter l'éditeur.</p>
+
+      <hr>
+
+      <h2>Thèmes — Parce que l'esthétique compte</h2>
+
+      <h3>One Dark Pro</h3>
+      <p>Le thème le plus populaire de VS Code. Couleurs équilibrées, lisible pendant des heures sans fatiguer les yeux.</p>
+
+      <h3>Catppuccin</h3>
+      <p>Pour ceux qui veulent quelque chose de plus pastel et moderne. 4 variantes (Latte, Frappé, Macchiato, Mocha).</p>
+
+      <hr>
+
+      <h2>Mon setup exact</h2>
+      <p>Si vous voulez copier mon setup complet, voici le fichier <code>extensions.json</code> à mettre dans <code>.vscode/</code> :</p>
+      <pre><code>{
+  "recommendations": [
+    "Codeium.codeium",
+    "Continue.continue",
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "usernamehw.errorlens",
+    "christian-kohler.path-intellisense",
+    "ms-vscode-remote.remote-ssh",
+    "ms-azuretools.vscode-docker"
+  ]
+}</code></pre>
+      <p>Partagez ce fichier avec votre équipe et tout le monde aura les mêmes extensions installées.</p>
+
+      <hr>
+      <p><em>Quelle est votre extension VS Code indispensable ? Partagez-la en commentaire.</em></p>
+
+    </div>
+  </article>
+</main>
+
+<footer>
+  <p>© 2026 LucasMdev · <a href="/">← Retour au blog</a> · <a href="mailto:lucasmdev@proton.me">Contact</a></p>
+</footer>
+
+</body>
+</html>
