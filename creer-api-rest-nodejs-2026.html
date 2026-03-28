@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Créer une API REST avec Node.js et Express en 2026 : Guide Complet</title>
+<meta name="description" content="Guide complet pour créer une API REST avec Node.js, Express et TypeScript en 2026. CRUD, authentification JWT, base de données, déploiement. Code complet fourni.">
+<link rel="canonical" href="https://lucasmdevdev.github.io/creer-api-rest-nodejs-2026.html">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav><a href="index.html">← Accueil</a></nav>
+
+<article>
+<h1>Créer une API REST avec Node.js en 2026 : Guide Complet</h1>
+<p class="meta">Par Lucas M Dev — 28 mars 2026 — 15 min de lecture</p>
+
+<p>Node.js + Express reste en 2026 l'une des stacks les plus utilisées pour créer des APIs backend. Ce guide vous montre comment créer une API REST complète de zéro : structure du projet, CRUD, validation, authentification JWT, et déploiement.</p>
+
+<div class="toc">
+<h2>Sommaire</h2>
+<ul>
+<li><a href="#setup">Setup du projet</a></li>
+<li><a href="#structure">Structure du projet</a></li>
+<li><a href="#routes">Routes CRUD</a></li>
+<li><a href="#validation">Validation des données</a></li>
+<li><a href="#auth">Authentification JWT</a></li>
+<li><a href="#database">Base de données avec Prisma</a></li>
+<li><a href="#deploy">Déploiement sur Railway</a></li>
+</ul>
+</div>
+
+<h2 id="setup">Setup du projet</h2>
+
+<pre><code># Créer le projet
+mkdir mon-api && cd mon-api
+npm init -y
+
+# Installer les dépendances
+npm install express cors helmet dotenv
+npm install --save-dev typescript ts-node-dev @types/express @types/cors @types/node
+
+# Initialiser TypeScript
+npx tsc --init</code></pre>
+
+<h3>Configuration TypeScript minimale</h3>
+
+<pre><code>// tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true
+  }
+}</code></pre>
+
+<h2 id="structure">Structure du projet recommandée</h2>
+
+<pre><code>mon-api/
+├── src/
+│   ├── controllers/      # Logique métier
+│   │   └── users.controller.ts
+│   ├── routes/           # Définition des routes
+│   │   └── users.routes.ts
+│   ├── middleware/        # Middlewares (auth, validation)
+│   │   └── auth.middleware.ts
+│   ├── types/            # Types TypeScript
+│   │   └── index.ts
+│   └── index.ts          # Point d'entrée
+├── .env
+├── package.json
+└── tsconfig.json</code></pre>
+
+<h3>Point d'entrée — src/index.ts</h3>
+
+<pre><code>import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import dotenv from 'dotenv';
+import usersRouter from './routes/users.routes';
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middlewares
+app.use(helmet()); // Headers de sécurité
+app.use(cors());   // Cross-Origin Resource Sharing
+app.use(express.json()); // Parser le JSON
+
+// Routes
+app.use('/api/users', usersRouter);
+
+// Health check
+app.get('/health', (req, res) =&gt; {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Gestion des erreurs globale
+app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) =&gt; {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Erreur interne du serveur' });
+});
+
+app.listen(PORT, () =&gt; {
+  console.log(`🚀 API démarrée sur http://localhost:${PORT}`);
+});</code></pre>
+
+<h2 id="routes">Routes CRUD</h2>
+
+<pre><code>// src/routes/users.routes.ts
+import { Router } from 'express';
+import {
+  getAllUsers, getUserById, createUser, updateUser, deleteUser
+} from '../controllers/users.controller';
+import { authMiddleware } from '../middleware/auth.middleware';
+
+const router = Router();
+
+router.get('/', getAllUsers);
+router.get('/:id', getUserById);
+router.post('/', createUser);
+router.put('/:id', authMiddleware, updateUser);   // Protégé
+router.delete('/:id', authMiddleware, deleteUser); // Protégé
+
+export default router;</code></pre>
+
+<pre><code>// src/controllers/users.controller.ts
+import { Request, Response } from 'express';
+
+// Simulation d'une base de données en mémoire
+let users = [
+  { id: 1, name: 'Alice', email: 'alice@example.com' },
+  { id: 2, name: 'Bob', email: 'bob@example.com' },
+];
+let nextId = 3;
+
+export const getAllUsers = (req: Request, res: Response) =&gt; {
+  const { page = '1', limit = '10' } = req.query;
+  const p = parseInt(page as string);
+  const l = parseInt(limit as string);
+  const start = (p - 1) * l;
+  const paginated = users.slice(start, start + l);
+
+  res.json({
+    data: paginated,
+    total: users.length,
+    page: p,
+    totalPages: Math.ceil(users.length / l)
+  });
+};
+
+export const getUserById = (req: Request, res: Response) =&gt; {
+  const user = users.find(u =&gt; u.id === parseInt(req.params.id));
+  if (!user) return res.status(404).json({ error: 'Utilisateur non trouvé' });
+  res.json(user);
+};
+
+export const createUser = (req: Request, res: Response) =&gt; {
+  const { name, email } = req.body;
+
+  if (!name || !email) {
+    return res.status(400).json({ error: 'name et email sont requis' });
+  }
+
+  if (users.some(u =&gt; u.email === email)) {
+    return res.status(409).json({ error: 'Email déjà utilisé' });
+  }
+
+  const newUser = { id: nextId++, name, email };
+  users.push(newUser);
+  res.status(201).json(newUser);
+};
+
+export const updateUser = (req: Request, res: Response) =&gt; {
+  const idx = users.findIndex(u =&gt; u.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ error: 'Utilisateur non trouvé' });
+
+  users[idx] = { ...users[idx], ...req.body, id: users[idx].id };
+  res.json(users[idx]);
+};
+
+export const deleteUser = (req: Request, res: Response) =&gt; {
+  const idx = users.findIndex(u =&gt; u.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ error: 'Utilisateur non trouvé' });
+
+  users.splice(idx, 1);
+  res.status(204).send();
+};</code></pre>
+
+<h2 id="validation">Validation avec Zod</h2>
+
+<p>Zod est la bibliothèque de validation recommandée en 2026. Elle s'intègre parfaitement avec TypeScript.</p>
+
+<pre><code>npm install zod</code></pre>
+
+<pre><code>import { z } from 'zod';
+
+// Schéma de validation
+const createUserSchema = z.object({
+  name: z.string().min(2, 'Le nom doit faire au moins 2 caractères').max(100),
+  email: z.string().email('Email invalide'),
+  age: z.number().min(18).max(120).optional()
+});
+
+// Middleware de validation
+export const validateBody = (schema: z.ZodSchema) =&gt; {
+  return (req: Request, res: Response, next: NextFunction) =&gt; {
+    const result = schema.safeParse(req.body);
+    if (!result.success) {
+      return res.status(400).json({
+        error: 'Données invalides',
+        details: result.error.flatten().fieldErrors
+      });
+    }
+    req.body = result.data;
+    next();
+  };
+};
+
+// Dans la route
+router.post('/', validateBody(createUserSchema), createUser);</code></pre>
+
+<h2 id="auth">Authentification avec JWT</h2>
+
+<pre><code>npm install jsonwebtoken bcryptjs
+npm install --save-dev @types/jsonwebtoken @types/bcryptjs</code></pre>
+
+<pre><code>// src/middleware/auth.middleware.ts
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+
+interface JWTPayload {
+  userId: number;
+  email: string;
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: JWTPayload;
+    }
+  }
+}
+
+export const authMiddleware = (req: Request, res: Response, next: NextFunction) =&gt; {
+  const token = req.headers.authorization?.split(' ')[1]; // Bearer TOKEN
+
+  if (!token) {
+    return res.status(401).json({ error: 'Token manquant' });
+  }
+
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
+    req.user = payload;
+    next();
+  } catch (err) {
+    return res.status(401).json({ error: 'Token invalide ou expiré' });
+  }
+};
+
+// Route de login
+export const loginHandler = async (req: Request, res: Response) =&gt; {
+  const { email, password } = req.body;
+
+  // Vérifier l'utilisateur en base de données...
+  const user = await findUserByEmail(email);
+  if (!user || !await bcrypt.compare(password, user.passwordHash)) {
+    return res.status(401).json({ error: 'Identifiants invalides' });
+  }
+
+  const token = jwt.sign(
+    { userId: user.id, email: user.email },
+    process.env.JWT_SECRET!,
+    { expiresIn: '7d' }
+  );
+
+  res.json({ token, user: { id: user.id, email: user.email } });
+};</code></pre>
+
+<h2 id="database">Base de données avec Prisma</h2>
+
+<p>Prisma est l'ORM recommandé en 2026 pour Node.js. Type-safe, performant, et excellent DX.</p>
+
+<pre><code>npm install prisma @prisma/client
+npx prisma init</code></pre>
+
+<pre><code>// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+  createdAt DateTime @default(now())
+}</code></pre>
+
+<pre><code># Créer et appliquer la migration
+npx prisma migrate dev --name init
+
+# Générer le client Prisma
+npx prisma generate</code></pre>
+
+<h2 id="deploy">Déploiement sur Railway</h2>
+
+<pre><code># Dockerfile minimal (optionnel mais recommandé)
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY dist/ ./dist/
+EXPOSE 3000
+CMD ["node", "dist/index.js"]</code></pre>
+
+<p>Avec Railway, le déploiement est simple :</p>
+<ol>
+<li>Pushez votre code sur GitHub</li>
+<li>Connectez Railway à votre repo</li>
+<li>Railway détecte Node.js automatiquement</li>
+<li>Ajoutez les variables d'environnement (JWT_SECRET, DATABASE_URL)</li>
+<li>Déploiement automatique à chaque push</li>
+</ol>
+
+<p><strong>Commande build à configurer dans Railway :</strong></p>
+<pre><code>npm run build</code></pre>
+<p><strong>Commande start :</strong></p>
+<pre><code>node dist/index.js</code></pre>
+
+<hr>
+<p><a href="deployer-app-gratuitement-2026.html">→ Déployer gratuitement avec Railway, Render, Fly.io</a></p>
+<p><a href="typescript-guide-debutant-2026.html">→ TypeScript pour débutants en 2026</a></p>
+</article>
+<footer><p>© 2026 LucasMDev — <a href="index.html">Accueil</a> | <a href="ressources.html">Ressources</a></p></footer>
+</body>
+</html>
