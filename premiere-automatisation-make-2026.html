@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Votre première automatisation avec Make en 2026 : guide pas à pas — LucasMdev</title>
+  <meta name="description" content="Créez votre première automatisation Make en 30 minutes sans code. Guide pas à pas : Gmail → Notion, avec cas d'usage concret et étapes détaillées.">
+  <meta name="author" content="Lucas M.">
+  <meta property="og:title" content="Votre première automatisation avec Make en 2026 : guide pas à pas">
+  <meta property="og:description" content="Créez votre première automatisation utile en 30 minutes, sans écrire une seule ligne de code.">
+  <meta property="og:type" content="article">
+  <link rel="canonical" href="https://lucasmdevdev.github.io/premiere-automatisation-make-2026.html">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">Lucas<span>M</span>.dev</a>
+    <nav>
+      <a href="/">Blog</a>
+      <a href="mailto:lucasmdev@proton.me">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <a href="/" class="back-link">← Retour au blog</a>
+
+  <article>
+    <header class="article-header">
+      <div class="meta">
+        <span>Tutoriel</span>
+        <span>Make</span>
+        <span>No-code</span>
+        28 mars 2026 · 6 min de lecture
+      </div>
+      <h1>Votre première automatisation avec Make en 2026 : guide pas à pas</h1>
+      <p class="intro">Vous avez entendu parler de l'automatisation no-code mais vous n'avez jamais sauté le pas ? Ce guide vous accompagne étape par étape — en moins de 30 minutes, sans une seule ligne de code.</p>
+    </header>
+
+    <div class="article-content">
+
+      <h2>Ce qu'on va construire</h2>
+      <p><strong>Objectif :</strong> Chaque fois que vous recevez un email contenant un lien, il est automatiquement sauvegardé dans une base Notion "À lire plus tard".</p>
+      <p>C'est simple, pratique, et parfait pour comprendre la logique de Make.</p>
+
+      <h2>Prérequis</h2>
+      <ul>
+        <li>Un compte Make gratuit (1000 opérations/mois offertes)</li>
+        <li>Un compte Gmail ou Outlook</li>
+        <li>Un compte Notion (gratuit)</li>
+        <li>~20-30 minutes</li>
+      </ul>
+
+      <h2>Étape 1 — Créer votre compte Make</h2>
+
+      <div class="affiliate-box">
+        <div class="aff-icon">⚡</div>
+        <div class="aff-text">
+          <strong>Créer un compte Make gratuit</strong>
+          <span>1000 opérations/mois • Sans carte bancaire • Prêt en 2 minutes</span>
+        </div>
+        <a href="https://www.make.com/en/register" class="btn" rel="sponsored">C'est gratuit →</a>
+      </div>
+
+      <h2>Étape 2 — Créer la base Notion "À lire"</h2>
+      <ol>
+        <li>Dans Notion, créez une nouvelle page</li>
+        <li>Ajoutez un database (type "Table")</li>
+        <li>Colonnes à créer :
+          <ul>
+            <li><strong>Titre</strong> (text) — le sujet de l'email</li>
+            <li><strong>Lien</strong> (URL) — le premier lien trouvé</li>
+            <li><strong>Date</strong> (date) — quand l'email a été reçu</li>
+            <li><strong>Source</strong> (text) — l'expéditeur</li>
+          </ul>
+        </li>
+      </ol>
+
+      <h2>Étape 3 — Créer le scénario Make</h2>
+
+      <h3>3.1 — Nouveau scénario</h3>
+      <p>Dans Make, cliquez sur "Create a new scenario". Vous arrivez sur l'éditeur visuel — c'est là que la magie opère.</p>
+
+      <h3>3.2 — Le trigger : Gmail</h3>
+      <p>Cliquez sur le "+" central → cherchez "Gmail" → choisissez "Watch Emails".</p>
+      <p>Configurez :</p>
+      <ul>
+        <li><strong>Folder</strong> : INBOX</li>
+        <li><strong>Criteria</strong> : All mail</li>
+        <li><strong>Maximum number of emails</strong> : 5 (pour débuter)</li>
+      </ul>
+      <p>Make va vous demander de connecter votre compte Gmail via OAuth — c'est sécurisé.</p>
+
+      <h3>3.3 — Le filtre : "contient un lien ?"</h3>
+      <p>Ajoutez un filtre entre Gmail et Notion :</p>
+      <ul>
+        <li><strong>Condition</strong> : <code>Body</code> → <code>Contains</code> → <code>http</code></li>
+      </ul>
+      <p>Ça évite de sauvegarder tous vos emails, seulement ceux avec des liens.</p>
+
+      <h3>3.4 — L'action : Notion</h3>
+      <p>Ajoutez un module Notion → "Create a Database Item". Configurez les champs :</p>
+      <ul>
+        <li><strong>Titre</strong> → <code>{{Subject}}</code></li>
+        <li><strong>Date</strong> → <code>{{Date}}</code></li>
+        <li><strong>Source</strong> → <code>{{From: Name}}</code></li>
+      </ul>
+
+      <h3>3.5 — Activer le scénario</h3>
+      <p>Cliquez sur "Run once" pour tester. Si tout fonctionne, activez le scheduling (toutes les 15 minutes).</p>
+
+      <h2>Résultat</h2>
+      <p>Désormais, chaque email avec un lien apparaît automatiquement dans votre Notion "À lire plus tard". Plus jamais un article oublié au fond de votre boîte mail.</p>
+
+      <h2>Pour aller plus loin</h2>
+      <ul>
+        <li><strong>Version avancée :</strong> Ajouter un module Claude/GPT pour résumer automatiquement l'article</li>
+        <li><strong>Version pro :</strong> Filtrer sur un label Gmail, ajouter une priorité basée sur l'expéditeur</li>
+        <li><strong>Version équipe :</strong> Notification Slack quand un article important arrive</li>
+      </ul>
+
+      <h2>Récapitulatif</h2>
+      <table>
+        <thead>
+          <tr><th>Étape</th><th>Action</th><th>Temps</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Créer compte Make</td><td>2 min</td></tr>
+          <tr><td>2</td><td>Créer base Notion</td><td>5 min</td></tr>
+          <tr><td>3</td><td>Configurer scénario</td><td>15 min</td></tr>
+          <tr><td>4</td><td>Tester + activer</td><td>5 min</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Total : ~27 minutes</strong> pour une automatisation qui vous fait gagner du temps chaque jour.</p>
+
+      <div class="affiliate-box">
+        <div class="aff-icon">🚀</div>
+        <div class="aff-text">
+          <strong>Prêt à automatiser ?</strong>
+          <span>Make offre 1000 opérations/mois gratuitement — sans carte bancaire</span>
+        </div>
+        <a href="https://www.make.com/en/register" class="btn" rel="sponsored">Commencer →</a>
+      </div>
+
+      <hr>
+      <p><em>Vous avez réussi à créer votre première automatisation ? Partagez ce que vous avez automatisé en commentaire !</em></p>
+
+      <div class="disclaimer">
+        Liens partenaires : je reçois une commission si vous créez un compte via mes liens, sans coût supplémentaire pour vous.
+      </div>
+
+    </div>
+  </article>
+</main>
+
+<footer>
+  <p>© 2026 LucasMdev · <a href="/">← Retour au blog</a> · <a href="mailto:lucasmdev@proton.me">Contact</a></p>
+</footer>
+
+</body>
+</html>
