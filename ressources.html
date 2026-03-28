@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ressources & Outils recommandés — LucasMdev</title>
+  <meta name="description" content="Tous les outils que j'utilise vraiment : IA, automatisation, no-code, développement, productivité. Sélection personnelle avec avis honnêtes.">
+  <meta name="author" content="Lucas M.">
+  <meta property="og:title" content="Ressources & Outils recommandés — LucasMdev">
+  <meta property="og:description" content="Tous les outils que j'utilise vraiment : IA, automatisation, no-code, développement, productivité.">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://lucasmdevdev.github.io/ressources.html">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .tools-section { margin-bottom: 60px; }
+    .tools-section h2 {
+      font-size: 1.4rem;
+      margin-bottom: 24px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--accent);
+      display: inline-block;
+    }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .tool-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color .15s, transform .15s;
+    }
+    .tool-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .tool-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .tool-icon {
+      font-size: 1.8rem;
+      width: 42px;
+      text-align: center;
+    }
+    .tool-name {
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+    .tool-badge {
+      font-size: .7rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      margin-left: auto;
+    }
+    .tool-badge.free { background: #10b981; }
+    .tool-badge.freemium { background: #f59e0b; color: #1a1a2e; }
+    .tool-desc {
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .tool-link {
+      margin-top: auto;
+      display: inline-block;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      padding: 6px 0;
+    }
+    .tool-link:hover { text-decoration: underline; }
+    .resources-intro {
+      background: var(--bg-alt);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 50px;
+      border-left: 4px solid var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">Lucas<span>M</span>.dev</a>
+    <nav>
+      <a href="/">Blog</a>
+      <a href="/ressources.html" class="active">Ressources</a>
+      <a href="mailto:lucasmdev@proton.me">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <a href="/" class="back-link">← Retour au blog</a>
+
+  <h1 style="font-size:2rem; margin-bottom:12px;">Outils & Ressources recommandés</h1>
+
+  <div class="resources-intro">
+    <p>Cette page regroupe tous les outils que j'utilise ou que j'ai testés sérieusement. Pas de liste exhaustive de 200 outils — uniquement ce que je recommande vraiment, avec mon avis honnête. Certains liens sont affiliés (marqués <strong>*</strong>), ce qui me permet de financer ce blog sans publicité intrusive.</p>
+  </div>
+
+  <!-- IA & LLM -->
+  <div class="tools-section">
+    <h2>🤖 Intelligence Artificielle</h2>
+    <div class="tools-grid">
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">🧠</div>
+          <div class="tool-name">Claude (Anthropic)</div>
+          <span class="tool-badge freemium">Freemium</span>
+        </div>
+        <p class="tool-desc">Mon LLM principal. Meilleur pour la rédaction longue, le code complexe, l'analyse de documents. Contexte 200K tokens. Excellent en français.</p>
+        <a href="https://claude.ai" class="tool-link" rel="sponsored">Essayer Claude →</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">🔍</div>
+          <div class="tool-name">Perplexity AI</div>
+          <span class="tool-badge freemium">Freemium</span>
+        </div>
+        <p class="tool-desc">Le moteur de recherche IA avec sources citées. Indispensable pour la veille et la recherche factuelle. Remplace Google pour 80% de mes recherches.</p>
+        <a href="https://perplexity.ai" class="tool-link" rel="sponsored">Essayer Perplexity →</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">💬</div>
+          <div class="tool-name">Mistral Le Chat</div>
+          <span class="tool-badge free">Gratuit</span>
+        </div>
+        <p class="tool-desc">La meilleure alternative gratuite et souveraine (données en Europe). Parfait pour une utilisation intensive sans budget. Excellent en français.</p>
+        <a href="https://chat.mistral.ai" class="tool-link">Essayer →</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">🌐</div>
+          <div class="tool-name">Google Gemini</div>
+          <span class="tool-badge free">Gratuit</span>
+        </div>
+        <p class="tool-desc">Intégration native Google Workspace. Idéal si vous utilisez Gmail, Docs, Drive. Analyse d'images et vidéos incluse.</p>
+        <a href="https://gemini.google.com" class="tool-link">Essayer →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Automatisation -->
+  <div class="tools-section">
+    <h2>⚡ Automatisation & No-code</h2>
+    <div class="tools-grid">
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">🔧</div>
+          <div class="tool-name">Make (ex-Integromat)</div>
+          <span class="tool-badge freemium">Freemium</span>
+        </div>
+        <p class="tool-desc">L'outil d'automatisation no-code que j'utilise le plus. 1000+ intégrations, visualisation en scénarios, tarifs très raisonnables. Le meilleur rapport qualité/prix.</p>
+        <a href="https://www.make.com/en/register" class="tool-link" rel="sponsored">Démarrer gratuitement →</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">🔀</div>
+          <div class="tool-name">n8n</div>
+          <span class="tool-badge free">Open source</span>
+        </div>
+        <p class="tool-desc">L'alternative open-source auto-hébergeable à Zapier/Make. Gratuit en self-hosted, puissance maximale pour les développeurs. Communauté très active.</p>
+        <a href="https://n8n.io" class="tool-link">Essayer n8n →</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">⚡</div>
+          <div class="tool-name">Zapier</div>
+          <span class="tool-badge freemium">Freemium</span>
+        </div>
+        <p class="tool-desc">Le standard de l'automatisation no-code. 6000+ intégrations, fiable et facile. Plus cher que Make mais l'expérience utilisateur est imbattable pour les débutants.</p>
+        <a href="https://zapier.com" class="tool-link">Essayer Zapier →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Dev tools -->
+  <div class="tools-section">
+    <h2>💻 Développement</h2>
+    <div class="tools-grid">
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">⚙️</div>
+          <div class="tool-name">Cursor</div>
+          <span class="tool-badge freemium">Freemium</span>
+        </div>
+        <p class="tool-desc">L'éditeur de code IA qui a changé ma façon de coder. Complète le code, répond aux questions sur la base de code, génère des fonctions entières. Basé sur VS Code.</p>
+        <a href="https://cursor.sh" class="tool-link" rel="sponsored">Télécharger Cursor →</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">🐙</div>
+          <div class="tool-name">GitHub Copilot</div>
+          <span class="tool-badge freemium">Freemium</span>
+        </div>
+        <p class="tool-desc">L'assistant IA de Microsoft intégré à VS Code. Plan gratuit depuis 2024 avec 2000 complétions/mois. Indispensable pour booster la productivité dev.</p>
+        <a href="https://github.com/features/copilot" class="tool-link">Essayer Copilot →</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">🐍</div>
+          <div class="tool-name">Python</div>
+          <span class="tool-badge free">Gratuit</span>
+        </div>
+        <p class="tool-desc">Le langage de l'automatisation et de l'IA. Si vous n'avez qu'un langage à apprendre en 2026, c'est celui-là. Ressources gratuites infinies, communauté immense.</p>
+        <a href="https://python.org" class="tool-link">Python.org →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Productivité -->
+  <div class="tools-section">
+    <h2>📋 Productivité</h2>
+    <div class="tools-grid">
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">📝</div>
+          <div class="tool-name">Notion</div>
+          <span class="tool-badge freemium">Freemium</span>
+        </div>
+        <p class="tool-desc">Mon outil de gestion de projets principal. Wiki, base de données, notes, roadmap — tout au même endroit. La version gratuite suffit pour un solo.</p>
+        <a href="https://notion.so" class="tool-link">Essayer Notion →</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">🔐</div>
+          <div class="tool-name">Bitwarden</div>
+          <span class="tool-badge free">Gratuit</span>
+        </div>
+        <p class="tool-desc">Le meilleur gestionnaire de mots de passe open source. Plan gratuit complet : mots de passe illimités, sync tous appareils. Audité annuellement.</p>
+        <a href="https://bitwarden.com" class="tool-link">Télécharger Bitwarden →</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">📬</div>
+          <div class="tool-name">Beehiiv</div>
+          <span class="tool-badge freemium">Freemium</span>
+        </div>
+        <p class="tool-desc">La meilleure plateforme pour lancer une newsletter en 2026. Gratuit jusqu'à 2500 abonnés, 0% de commission, analytics pro, réseau de monétisation intégré.</p>
+        <a href="https://www.beehiiv.com" class="tool-link" rel="sponsored">Créer ma newsletter →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Hébergement & Deploy -->
+  <div class="tools-section">
+    <h2>🚀 Hébergement & Déploiement</h2>
+    <div class="tools-grid">
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">📄</div>
+          <div class="tool-name">GitHub Pages</div>
+          <span class="tool-badge free">Gratuit</span>
+        </div>
+        <p class="tool-desc">Hébergement statique gratuit et illimité. Ce blog tourne dessus. Parfait pour les sites vitrine, blogs, portfolios. Déploiement automatique via git push.</p>
+        <a href="https://pages.github.com" class="tool-link">GitHub Pages →</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">▲</div>
+          <div class="tool-name">Vercel</div>
+          <span class="tool-badge freemium">Freemium</span>
+        </div>
+        <p class="tool-desc">Le meilleur hébergement pour apps Next.js/React. Plan gratuit très généreux. Déploiement en 30 secondes depuis GitHub. Serverless functions incluses.</p>
+        <a href="https://vercel.com" class="tool-link">Essayer Vercel →</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">🐋</div>
+          <div class="tool-name">Railway</div>
+          <span class="tool-badge freemium">Freemium</span>
+        </div>
+        <p class="tool-desc">L'alternative simple à Heroku. Déployez des apps Python, Node, Docker en quelques minutes. 5$ de crédits/mois offerts. Idéal pour les side projects.</p>
+        <a href="https://railway.app" class="tool-link">Essayer Railway →</a>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>© 2026 LucasMdev · <a href="mailto:lucasmdev@proton.me">Contact</a> · Certains liens sont affiliés — cela ne change pas mon avis</p>
+  </div>
+</footer>
+
+</body>
+</html>
