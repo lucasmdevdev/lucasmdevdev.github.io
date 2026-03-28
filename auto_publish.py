@@ -272,6 +272,19 @@ def main():
     article_path.rename(PUBLISHED_DIR / filename)
     log(f"Article déplacé vers queue/published/")
 
+    # Ping WebSub hub pour notifier les agrégateurs
+    try:
+        import urllib.parse, urllib.request
+        data = urllib.parse.urlencode({
+            "hub.mode": "publish",
+            "hub.url": "https://lucasmdevdev.github.io/feed.xml"
+        }).encode()
+        req = urllib.request.Request("https://pubsubhubbub.appspot.com/", data=data)
+        resp = urllib.request.urlopen(req, timeout=10)
+        log(f"WebSub ping: {resp.status}")
+    except Exception as e:
+        log(f"WebSub ping échoué: {e}")
+
     # Status update
     time_str = datetime.datetime.now().strftime("%H:%M")
     title_short = meta["title"][:50]
