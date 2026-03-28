@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Déployer une App Gratuitement en 2026 : Railway, Render, Fly.io, Vercel comparés</title>
+<meta name="description" content="Comment déployer une app web gratuitement en 2026 ? Comparatif Railway, Render, Fly.io, Vercel, Netlify. Limites des plans gratuits, configuration, cas d'usage.">
+<link rel="canonical" href="https://lucasmdevdev.github.io/deployer-app-gratuitement-2026.html">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav><a href="index.html">← Accueil</a></nav>
+
+<article>
+<h1>Déployer une App Gratuitement en 2026 : Comparatif Railway, Render, Fly.io, Vercel</h1>
+<p class="meta">Par Lucas M Dev — 28 mars 2026 — 10 min de lecture</p>
+
+<p>Heroku qui supprime son plan gratuit en 2022 a tout changé. Depuis, plusieurs plateformes se sont positionnées pour récupérer les développeurs orphelins. En 2026, on a l'embarras du choix — mais toutes ne se valent pas. Voici un comparatif honnête pour déployer votre app sans sortir la carte bleue.</p>
+
+<div class="toc">
+<h2>Sommaire</h2>
+<ul>
+<li><a href="#railway">Railway</a></li>
+<li><a href="#render">Render</a></li>
+<li><a href="#flyio">Fly.io</a></li>
+<li><a href="#vercel">Vercel</a></li>
+<li><a href="#netlify">Netlify</a></li>
+<li><a href="#tableau">Tableau comparatif</a></li>
+<li><a href="#conseils">Conseils pratiques</a></li>
+</ul>
+</div>
+
+<h2 id="railway">Railway — La montée en puissance</h2>
+
+<p>Railway s'est imposé comme la plateforme préférée des indie developers. L'UX est excellente, le déploiement depuis GitHub prend 2 minutes, et le plan gratuit est généreux.</p>
+
+<h3>Plan gratuit Railway</h3>
+<ul>
+<li><strong>500 heures d'exécution/mois</strong> (environ 20h/jour)</li>
+<li><strong>512 MB RAM</strong> par service</li>
+<li><strong>1 GB de volume de stockage</strong></li>
+<li>Déploiement depuis GitHub en un clic</li>
+<li>Variables d'environnement, logs en temps réel</li>
+<li>Bases de données PostgreSQL, MySQL, Redis, MongoDB disponibles</li>
+</ul>
+
+<h3>Points forts</h3>
+<ul>
+<li>Interface ultra simple et moderne</li>
+<li>Déploiement par git push automatique</li>
+<li>Support multi-langages : Node.js, Python, Go, Ruby, Java...</li>
+<li>Métriques et logs en temps réel</li>
+<li>Networking entre services dans le même projet</li>
+</ul>
+
+<h3>Points faibles</h3>
+<ul>
+<li>Les 500h/mois peuvent être insuffisantes pour une app 24/7 (20j max)</li>
+<li>Plan payant à 5$/mois (Starter) pour aller plus loin</li>
+<li>Support limité sur le plan gratuit</li>
+</ul>
+
+<pre><code># Déploiement Railway en 3 commandes
+npm install -g @railway/cli
+railway login
+railway up</code></pre>
+
+<p><a href="https://railway.app" rel="nofollow" target="_blank">→ Essayer Railway gratuitement</a></p>
+
+<h2 id="render">Render — L'alternative Heroku la plus proche</h2>
+
+<p>Render est souvent cité comme le remplaçant naturel de Heroku. Plan gratuit pour les web services, mais avec une contrainte : les services gratuits "dorment" après 15 minutes d'inactivité.</p>
+
+<h3>Plan gratuit Render</h3>
+<ul>
+<li>Web services gratuits (avec sleep après 15min d'inactivité)</li>
+<li>PostgreSQL gratuit (90 jours puis supprimé)</li>
+<li>Static sites illimités et gratuits</li>
+<li>750h/mois de calcul</li>
+</ul>
+
+<h3>Points forts</h3>
+<ul>
+<li>Déploiement depuis GitHub/GitLab automatique</li>
+<li>Auto-scaling sur les plans payants</li>
+<li>Health checks et notifications</li>
+<li>Bonne documentation</li>
+</ul>
+
+<h3>Points faibles</h3>
+<ul>
+<li>Le "cold start" de 30-60 secondes après inactivité peut être problématique</li>
+<li>PostgreSQL gratuit expiré après 90 jours</li>
+<li>Plan payant plus cher que Railway ($7/mois minimum)</li>
+</ul>
+
+<pre><code># render.yaml — définir votre service
+services:
+  - type: web
+    name: mon-app
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app</code></pre>
+
+<p><a href="https://render.com" rel="nofollow" target="_blank">→ Essayer Render gratuitement</a></p>
+
+<h2 id="flyio">Fly.io — Le plus technique mais le plus puissant</h2>
+
+<p>Fly.io est une plateforme orientée containers Docker qui permet de déployer dans 30+ régions mondiales. Courbe d'apprentissage plus élevée, mais des capacités impressionnantes.</p>
+
+<h3>Plan gratuit Fly.io</h3>
+<ul>
+<li><strong>3 VMs partagées</strong> (256 MB RAM chacune)</li>
+<li><strong>3 GB de volume de stockage</strong></li>
+<li><strong>160 GB de bande passante/mois</strong></li>
+<li>PostgreSQL managé gratuit (Fly Postgres)</li>
+<li>Pas de "sleep" — vos apps tournent 24/7</li>
+</ul>
+
+<h3>Points forts</h3>
+<ul>
+<li>Déploiement dans 30+ régions — très proche des utilisateurs</li>
+<li>Apps tournent 24/7 sans cold start</li>
+<li>Support Docker natif — déployez n'importe quoi</li>
+<li>Excellent pour les apps avec état (SQLite, volumes persistants)</li>
+<li>Réseau privé entre apps dans la même organisation</li>
+</ul>
+
+<h3>Points faibles</h3>
+<ul>
+<li>CLI Flyctl obligatoire — moins visuel que Railway</li>
+<li>Carte bancaire requise pour s'inscrire (même pour le plan gratuit)</li>
+<li>Courbe d'apprentissage plus élevée</li>
+</ul>
+
+<pre><code># Déploiement Fly.io
+fly launch  # génère un fly.toml
+fly deploy  # déploie votre app</code></pre>
+
+<p><a href="https://fly.io" rel="nofollow" target="_blank">→ Essayer Fly.io</a></p>
+
+<h2 id="vercel">Vercel — Le roi du frontend</h2>
+
+<p>Vercel est la plateforme de déploiement créée par les fondateurs de Next.js. C'est LE standard pour les apps React/Next.js, mais aussi compatible avec Vue, Svelte, Astro, etc.</p>
+
+<h3>Plan gratuit Vercel</h3>
+<ul>
+<li><strong>100 déploiements/jour</strong></li>
+<li><strong>Serverless Functions</strong> incluses (100 GB-heures/mois)</li>
+<li><strong>100 GB de bande passante/mois</strong></li>
+<li>Edge Network mondial (CDN)</li>
+<li>SSL automatique + domaines custom</li>
+<li>Preview deployments à chaque PR</li>
+</ul>
+
+<h3>Points forts</h3>
+<ul>
+<li>Déploiement depuis GitHub en 30 secondes</li>
+<li>CDN mondial — performances excellentes partout</li>
+<li>Preview deployments par branche — idéal pour les équipes</li>
+<li>Edge Functions pour la logique proche des utilisateurs</li>
+<li>Analytics inclus</li>
+</ul>
+
+<h3>Points faibles</h3>
+<ul>
+<li>Pas de containers — serverless only</li>
+<li>Limites sur les Serverless Functions (10s d'exécution max sur plan gratuit)</li>
+<li>Usage commercial de certaines fonctionnalités nécessite un plan payant</li>
+</ul>
+
+<p><a href="https://vercel.com" rel="nofollow" target="_blank">→ Essayer Vercel gratuitement</a></p>
+
+<h2 id="netlify">Netlify — Le spécialiste des sites statiques</h2>
+
+<p>Netlify popularisé le concept de JAMstack. Excellent pour les sites statiques générés (Next.js statique, Hugo, Gatsby), avec des Netlify Functions pour la logique backend.</p>
+
+<h3>Plan gratuit Netlify</h3>
+<ul>
+<li><strong>100 GB de bande passante/mois</strong></li>
+<li><strong>300 minutes de build/mois</strong></li>
+<li>Netlify Functions (125k requêtes/mois)</li>
+<li>Forms (100 soumissions/mois)</li>
+<li>SSL automatique</li>
+</ul>
+
+<p><a href="https://netlify.com" rel="nofollow" target="_blank">→ Essayer Netlify gratuitement</a></p>
+
+<h2 id="tableau">Tableau comparatif 2026</h2>
+
+<table>
+<thead>
+<tr><th>Plateforme</th><th>Gratuit ?</th><th>Sleep ?</th><th>Base de données</th><th>Idéal pour</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Railway</strong></td><td>500h/mois</td><td>Non</td><td>Oui (PG, Redis)</td><td>Backend full-stack</td></tr>
+<tr><td><strong>Render</strong></td><td>750h/mois</td><td>Oui (15min)</td><td>PG 90j</td><td>Apps Node/Python</td></tr>
+<tr><td><strong>Fly.io</strong></td><td>3 VMs</td><td>Non</td><td>Oui (Fly PG)</td><td>Docker, apps stateful</td></tr>
+<tr><td><strong>Vercel</strong></td><td>Oui</td><td>N/A (serverless)</td><td>Non natif</td><td>Next.js, React</td></tr>
+<tr><td><strong>Netlify</strong></td><td>Oui</td><td>N/A (statique)</td><td>Non natif</td><td>Sites statiques</td></tr>
+</tbody>
+</table>
+
+<h2 id="conseils">Conseils pratiques</h2>
+
+<h3>Quelle plateforme pour quel projet ?</h3>
+
+<ul>
+<li><strong>App Next.js/React</strong> → Vercel (c'est fait pour ça)</li>
+<li><strong>Backend Python/Node avec base de données</strong> → Railway ou Fly.io</li>
+<li><strong>Site statique (Hugo, Jekyll, Astro)</strong> → Netlify ou GitHub Pages</li>
+<li><strong>App Docker complexe</strong> → Fly.io</li>
+<li><strong>MVP qui doit tourner 24/7 gratuitement</strong> → Fly.io (pas de sleep)</li>
+</ul>
+
+<h3>Combiner les plateformes</h3>
+<p>Rien ne vous oblige à tout mettre au même endroit. Une stratégie courante :</p>
+<ul>
+<li>Frontend Next.js sur <strong>Vercel</strong> (CDN mondial, preview deployments)</li>
+<li>Backend API sur <strong>Railway</strong> ou <strong>Fly.io</strong></li>
+<li>Base de données PostgreSQL sur <strong>Supabase</strong> (plan gratuit généreux)</li>
+</ul>
+
+<p>Cette architecture vous donne des performances excellentes pour 0€/mois sur de petits projets.</p>
+
+<h3>Attention aux limites</h3>
+<p>Les plans gratuits sont conçus pour le développement et les side projects, pas pour la production à grande échelle. Dès que votre trafic monte ou que vos besoins en ressources augmentent, prévoyez de passer sur un plan payant. Railway et Fly.io ont des plans payants très raisonnables ($5-20/mois pour la grande majorité des projets).</p>
+
+<hr>
+<p><a href="github-pages-blog-gratuit-2026.html">→ Créer un blog gratuit avec GitHub Pages</a></p>
+<p><a href="python-automation-scripts-2026.html">→ Scripts Python pour automatiser votre vie de dev</a></p>
+</article>
+<footer><p>© 2026 LucasMDev — <a href="index.html">Accueil</a> | <a href="ressources.html">Ressources</a></p></footer>
+</body>
+</html>

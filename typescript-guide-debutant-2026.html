@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TypeScript pour Débutants en 2026 : Guide Complet pour Apprendre</title>
+<meta name="description" content="Guide complet pour apprendre TypeScript en 2026. Pourquoi TypeScript ? Types de base, interfaces, génériques, configuration. Ressources et formations recommandées.">
+<link rel="canonical" href="https://lucasmdevdev.github.io/typescript-guide-debutant-2026.html">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav><a href="index.html">← Accueil</a></nav>
+
+<article>
+<h1>TypeScript en 2026 : Guide Complet pour Débutants</h1>
+<p class="meta">Par Lucas M Dev — 28 mars 2026 — 15 min de lecture</p>
+
+<p>TypeScript est devenu incontournable. En 2026, la quasi-totalité des projets JavaScript professionnels utilisent TypeScript. Si vous ne l'avez pas encore adopté, ce guide vous explique pourquoi et comment commencer — même si vous débutez.</p>
+
+<div class="toc">
+<h2>Sommaire</h2>
+<ul>
+<li><a href="#pourquoi">Pourquoi TypeScript ?</a></li>
+<li><a href="#installation">Installation et configuration</a></li>
+<li><a href="#types-base">Les types de base</a></li>
+<li><a href="#interfaces">Interfaces et types</a></li>
+<li><a href="#fonctions">Fonctions typées</a></li>
+<li><a href="#generiques">Génériques</a></li>
+<li><a href="#ressources">Ressources pour aller plus loin</a></li>
+</ul>
+</div>
+
+<h2 id="pourquoi">Pourquoi TypeScript en 2026 ?</h2>
+
+<p>JavaScript est dynamiquement typé — vous ne savez pas si une variable est un nombre ou une chaîne de caractères avant l'exécution. TypeScript ajoute un système de types statiques au-dessus de JavaScript, permettant de détecter les erreurs avant même de lancer le code.</p>
+
+<h3>Les avantages concrets</h3>
+<ul>
+<li><strong>Détection des bugs à la compilation</strong> : "Cannot read property of undefined" avant d'arriver en prod</li>
+<li><strong>Autocomplétion améliorée</strong> : VS Code devient beaucoup plus intelligent</li>
+<li><strong>Refactoring plus sûr</strong> : renommer une variable ne casse plus tout</li>
+<li><strong>Documentation vivante</strong> : les types documentent le code</li>
+<li><strong>Collaboration facilitée</strong> : les contrats entre fonctions sont explicites</li>
+</ul>
+
+<h3>TypeScript en chiffres</h3>
+<ul>
+<li>95% des offres d'emploi frontend en 2026 mentionnent TypeScript</li>
+<li>Top 5 des langages les plus aimés sur Stack Overflow depuis 3 ans</li>
+<li>Utilisé par Microsoft, Google, Airbnb, Slack, Atlassian...</li>
+</ul>
+
+<h2 id="installation">Installation et configuration</h2>
+
+<pre><code># Installer TypeScript globalement
+npm install -g typescript
+
+# Vérifier la version
+tsc --version
+
+# Créer un projet
+mkdir mon-projet-ts
+cd mon-projet-ts
+npm init -y
+npm install --save-dev typescript @types/node
+
+# Initialiser la config TypeScript
+npx tsc --init</code></pre>
+
+<p>Le fichier <code>tsconfig.json</code> généré contient toutes les options de compilation. Les plus importantes pour démarrer :</p>
+
+<pre><code>{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "strict": true,          // Active tous les checks stricts
+    "outDir": "./dist",      // Dossier de sortie
+    "rootDir": "./src",      // Dossier source
+    "esModuleInterop": true  // Compatibilité imports
+  }
+}</code></pre>
+
+<h2 id="types-base">Les types de base</h2>
+
+<pre><code>// Types primitifs
+let nom: string = "Alice";
+let age: number = 25;
+let actif: boolean = true;
+
+// Arrays
+let notes: number[] = [18, 15, 20];
+let mots: Array&lt;string&gt; = ["bonjour", "monde"];
+
+// Tuples — tableau de taille fixe avec types définis
+let coordonnees: [number, number] = [48.8566, 2.3522];
+
+// Enums
+enum Direction {
+  Nord = "NORD",
+  Sud = "SUD",
+  Est = "EST",
+  Ouest = "OUEST"
+}
+let direction: Direction = Direction.Nord;
+
+// Union types — plusieurs types possibles
+let id: string | number = "abc123";
+id = 42; // Valide aussi
+
+// Type littéral
+let statut: "actif" | "inactif" | "en_attente" = "actif";
+
+// Any — à éviter !
+let inconnu: any = "peut être n'importe quoi";
+
+// Unknown — meilleure alternative à any
+let valeur: unknown = fetchData();
+if (typeof valeur === "string") {
+  console.log(valeur.toUpperCase()); // OK car on a vérifié
+}
+
+// Null et undefined
+let optional: string | null = null;
+let peut_etre: string | undefined = undefined;</code></pre>
+
+<h2 id="interfaces">Interfaces et Types</h2>
+
+<p>Les interfaces définissent la forme d'un objet. C'est l'une des fonctionnalités les plus utiles de TypeScript.</p>
+
+<pre><code>// Interface de base
+interface Utilisateur {
+  id: number;
+  nom: string;
+  email: string;
+  age?: number;  // Propriété optionnelle
+  readonly createdAt: Date;  // Lecture seule
+}
+
+// Utilisation
+function saluer(user: Utilisateur): string {
+  return `Bonjour, ${user.nom} !`;
+}
+
+const alice: Utilisateur = {
+  id: 1,
+  nom: "Alice",
+  email: "alice@example.com",
+  createdAt: new Date()
+};
+
+// Interface avec méthodes
+interface Service {
+  nom: string;
+  start(): void;
+  stop(): Promise&lt;void&gt;;
+  getStatus(): "running" | "stopped" | "error";
+}
+
+// Extension d'interface
+interface Admin extends Utilisateur {
+  permissions: string[];
+  niveau: 1 | 2 | 3;
+}
+
+// Type alias — similaire aux interfaces mais plus flexible
+type Point = {
+  x: number;
+  y: number;
+};
+
+// Type pour les fonctions
+type Handler = (event: Event) => void;
+
+// Intersection de types
+type AdminComplet = Utilisateur &amp; Admin &amp; { superAdmin: boolean };</code></pre>
+
+<h2 id="fonctions">Fonctions typées</h2>
+
+<pre><code>// Paramètres et retour typés
+function additionner(a: number, b: number): number {
+  return a + b;
+}
+
+// Paramètre optionnel
+function creerMessage(nom: string, titre?: string): string {
+  return titre ? `${titre} ${nom}` : nom;
+}
+
+// Valeur par défaut
+function multipier(a: number, b: number = 2): number {
+  return a * b;
+}
+
+// Rest parameters
+function somme(...nombres: number[]): number {
+  return nombres.reduce((acc, n) => acc + n, 0);
+}
+
+// Fonction avec générique (voir section suivante)
+function premier&lt;T&gt;(tableau: T[]): T | undefined {
+  return tableau[0];
+}
+
+// Arrow function typée
+const diviser = (a: number, b: number): number => {
+  if (b === 0) throw new Error("Division par zéro");
+  return a / b;
+};
+
+// Overloads — même fonction, signatures différentes
+function format(valeur: string): string;
+function format(valeur: number): string;
+function format(valeur: string | number): string {
+  if (typeof valeur === "number") {
+    return valeur.toFixed(2);
+  }
+  return valeur.trim();
+}</code></pre>
+
+<h2 id="generiques">Génériques</h2>
+
+<p>Les génériques permettent de créer des composants réutilisables qui fonctionnent avec plusieurs types.</p>
+
+<pre><code>// Générique simple
+function identite&lt;T&gt;(valeur: T): T {
+  return valeur;
+}
+
+identite&lt;string&gt;("bonjour"); // Type inféré : string
+identite(42);                  // Type inféré : number
+
+// Interface générique
+interface Reponse&lt;T&gt; {
+  data: T;
+  status: number;
+  message: string;
+}
+
+interface Utilisateur {
+  id: number;
+  nom: string;
+}
+
+// Maintenant la réponse est typée selon le contenu
+const reponse: Reponse&lt;Utilisateur&gt; = {
+  data: { id: 1, nom: "Alice" },
+  status: 200,
+  message: "OK"
+};
+
+// Contraintes sur les génériques
+interface AvecId {
+  id: number;
+}
+
+function trouverParId&lt;T extends AvecId&gt;(tableau: T[], id: number): T | undefined {
+  return tableau.find(item =&gt; item.id === id);
+}
+
+// Utilitaires TypeScript intégrés
+type UtilisateurPartiel = Partial&lt;Utilisateur&gt;;   // Toutes les props optionnelles
+type UtilisateurRequis = Required&lt;Utilisateur&gt;;   // Toutes les props requises
+type UtilisateurLecture = Readonly&lt;Utilisateur&gt;;  // Toutes les props en lecture seule
+type InfosBase = Pick&lt;Utilisateur, "id" | "nom"&gt;; // Sélection de props
+type SansId = Omit&lt;Utilisateur, "id"&gt;;            // Exclusion de props</code></pre>
+
+<h2 id="ressources">Ressources pour progresser</h2>
+
+<h3>Gratuit</h3>
+<ul>
+<li><strong>Documentation officielle</strong> : <a href="https://www.typescriptlang.org/docs/" rel="nofollow" target="_blank">typescriptlang.org/docs</a> — la référence absolue</li>
+<li><strong>TypeScript Playground</strong> : <a href="https://www.typescriptlang.org/play" rel="nofollow" target="_blank">playground</a> — testez du TS dans le navigateur</li>
+<li><strong>Total TypeScript (cours gratuits)</strong> : Matt Pocock, créateur de contenu TS reconnu</li>
+<li><strong>Exercices pratiques</strong> : type-challenges sur GitHub</li>
+</ul>
+
+<h3>Formations payantes (les meilleures)</h3>
+<ul>
+<li><strong>Total TypeScript Pro</strong> (~$150) : cours complet par Matt Pocock, considéré comme la meilleure formation TypeScript disponible</li>
+<li><strong>Udemy — TypeScript: The Complete Developer's Guide</strong> (~15€ en promo) : très bien pour les débutants</li>
+<li><strong>Frontend Masters</strong> : plusieurs cours TypeScript avancés ($39/mois)</li>
+</ul>
+
+<h3>Ma recommandation</h3>
+<p>Commencez par la documentation officielle + le Playground pour les bases. Puis pratiquez en convertissant un de vos projets JavaScript existants en TypeScript. C'est en faisant que vous apprendrez vraiment.</p>
+
+<p>Si vous voulez aller vite, les cours Udemy en promo à 15€ offrent un excellent retour sur investissement pour commencer.</p>
+
+<hr>
+<p><a href="meilleures-extensions-vscode-2026.html">→ Les meilleures extensions VS Code pour TypeScript</a></p>
+<p><a href="claude-api-python-tutoriel-2026.html">→ Créer un chatbot IA avec Claude API</a></p>
+</article>
+<footer><p>© 2026 LucasMDev — <a href="index.html">Accueil</a> | <a href="ressources.html">Ressources</a></p></footer>
+</body>
+</html>
