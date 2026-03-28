@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faire tourner des LLM en local en 2026 : guide complet Ollama — LucasMdev</title>
+  <meta name="description" content="Guide complet pour faire tourner un LLM en local avec Ollama en 2026. Confidentialité, 0€/mois, disponible hors-ligne. Tous les modèles et configs expliqués.">
+  <meta name="author" content="Lucas M.">
+  <meta property="og:title" content="Faire tourner des LLM en local en 2026 : guide complet avec Ollama">
+  <meta property="og:description" content="Votre propre ChatGPT privé, gratuit et hors-ligne. Guide pas à pas avec Ollama.">
+  <meta property="og:type" content="article">
+  <link rel="canonical" href="https://lucasmdevdev.github.io/llm-local-ollama-2026.html">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">Lucas<span>M</span>.dev</a>
+    <nav>
+      <a href="/">Blog</a>
+      <a href="mailto:lucasmdev@proton.me">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <a href="/" class="back-link">← Retour au blog</a>
+
+  <article>
+    <header class="article-header">
+      <div class="meta">
+        <span>LLM</span>
+        <span>Open-source</span>
+        <span>Privacy</span>
+        28 mars 2026 · 8 min de lecture
+      </div>
+      <h1>Faire tourner des LLM en local en 2026 : guide complet avec Ollama</h1>
+      <p class="intro">Vous en avez marre de payer pour ChatGPT chaque mois ? Ou de voir vos données d'entreprise partir dans les serveurs d'OpenAI ? En 2026, faire tourner un LLM puissant sur votre propre machine est devenu accessible à tous.</p>
+    </header>
+
+    <div class="article-content">
+
+      <h2>Pourquoi faire tourner un LLM en local ?</h2>
+      <ul>
+        <li><strong>Confidentialité totale</strong> — vos données ne quittent pas votre machine</li>
+        <li><strong>0€/mois</strong> — pas d'abonnement, pas de facturation à l'usage</li>
+        <li><strong>Disponible hors-ligne</strong> — ça marche même sans internet</li>
+        <li><strong>Personnalisable</strong> — vous contrôlez le modèle, les paramètres, tout</li>
+      </ul>
+      <p>Le seul bémol : il faut du hardware. Mais vous êtes probablement surpris par ce que vous avez déjà.</p>
+
+      <h2>Configuration minimale recommandée</h2>
+      <table>
+        <thead>
+          <tr><th>Usage</th><th>RAM</th><th>GPU VRAM</th><th>Modèles supportés</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Basique</td><td>8 Go</td><td>—</td><td>Phi-3 Mini, Gemma 2B</td></tr>
+          <tr><td>Confortable</td><td>16 Go</td><td>6 Go</td><td>Llama 3.1 8B, Mistral 7B</td></tr>
+          <tr><td>Pro</td><td>32 Go</td><td>12 Go</td><td>Llama 3.3 70B Q4, Qwen 72B</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Sans GPU ?</strong> Pas de panique — les modèles en CPU-only sont lents mais fonctionnels pour la plupart des usages.</p>
+
+      <h2>Ollama — l'outil incontournable</h2>
+      <p>Ollama est devenu <strong>le standard</strong> pour faire tourner des LLM en local. C'est simple, rapide, et ça marche sur Mac, Linux, et Windows.</p>
+
+      <h3>Installation</h3>
+      <pre><code># Linux / Mac
+curl -fsSL https://ollama.ai/install.sh | sh
+
+# Windows : télécharger l'installeur sur ollama.ai</code></pre>
+
+      <h3>Premier modèle</h3>
+      <pre><code># Télécharger et lancer Llama 3.1 8B (4.7 Go)
+ollama run llama3.1
+
+# Ou le plus léger Phi-3 Mini (2.3 Go)
+ollama run phi3:mini</code></pre>
+      <p>C'est tout. Ollama télécharge le modèle et ouvre un chat directement dans le terminal.</p>
+
+      <h2>Les meilleurs modèles en 2026</h2>
+
+      <h3>Pour la rédaction et le chat général</h3>
+      <p><strong>Llama 3.3 70B</strong> (Meta) — Le meilleur open-source toutes catégories. Nécessite 40+ Go de VRAM ou 64 Go RAM en CPU.</p>
+      <p><strong>Mistral Small 3.1</strong> — Excellent rapport qualité/taille. 24B paramètres, tourne sur 16 Go RAM.</p>
+
+      <h3>Pour le code</h3>
+      <p><strong>DeepSeek Coder V2</strong> — Meilleur que GPT-4 pour le code selon plusieurs benchmarks. Version 16B accessible avec 16 Go RAM.</p>
+      <p><strong>Qwen2.5 Coder 7B</strong> — Plus léger, excellent pour la completion de code au quotidien.</p>
+
+      <h3>Pour les petites configs</h3>
+      <p><strong>Phi-3.5 Mini</strong> (3.8B) — Microsoft a fait un miracle ici. Qualité surprenante pour sa taille.</p>
+      <p><strong>Gemma 2 2B</strong> — Idéal pour des usages simples sur machine peu puissante.</p>
+
+      <h2>Open WebUI — l'interface ChatGPT pour votre Ollama</h2>
+      <p>Le terminal c'est bien, mais une interface web c'est mieux.</p>
+      <pre><code># Avec Docker
+docker run -d -p 3000:8080 \
+  -v open-webui:/app/backend/data \
+  -e OLLAMA_BASE_URL=http://host.docker.internal:11434 \
+  --name open-webui ghcr.io/open-webui/open-webui:main</code></pre>
+      <p>Accédez à <code>http://localhost:3000</code> — vous avez votre propre ChatGPT privé.</p>
+
+      <h2>Cas d'usage pratiques</h2>
+
+      <h3>Assistant de développement local</h3>
+      <pre><code>ollama run deepseek-coder-v2:16b</code></pre>
+      <p>"Explique ce code", "Génère des tests unitaires", "Refactor cette fonction" — tout ça tourne en local.</p>
+
+      <h3>Résumé de documents confidentiels</h3>
+      <p>Vous avez un contrat NDA à analyser ? Un rapport interne à résumer ? Chargez-le dans Open WebUI, votre LLM le traite sans que rien ne parte sur internet.</p>
+
+      <h3>Génération de contenu</h3>
+      <p>Avec les bons prompts, Llama 3.3 70B produit des textes de qualité professionnelle. C'est ce que j'utilise pour dégrossir mes articles avant révision manuelle.</p>
+
+      <h2>Performance réelle sur différentes configs</h2>
+      <table>
+        <thead>
+          <tr><th>Machine</th><th>Modèle</th><th>Vitesse</th><th>Verdict</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>MacBook Pro M2 (16 Go)</td><td>Llama 3.1 8B</td><td>~25 tok/s</td><td>✅ Confortable</td></tr>
+          <tr><td>PC Linux + RTX 3060 12 Go</td><td>Mistral 7B</td><td>~45 tok/s</td><td>✅✅ Excellent</td></tr>
+          <tr><td>PC Linux, i5, 8 Go RAM, no GPU</td><td>Phi-3 Mini</td><td>~8 tok/s</td><td>⚠️ Lent mais ok</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Pour aller plus loin</h2>
+      <ul>
+        <li><strong>LM Studio</strong> — alternative graphique à Ollama, parfaite pour ceux qui préfèrent les interfaces visuelles</li>
+        <li><strong>Jan</strong> — client desktop avec interface soignée</li>
+        <li><strong>AnythingLLM</strong> — RAG (retrieval-augmented generation) sur vos propres documents</li>
+      </ul>
+
+      <hr>
+      <p><em>Vous avez des questions sur votre configuration spécifique ? Décrivez votre machine en commentaire, je vous dis quels modèles sont adaptés.</em></p>
+
+    </div>
+  </article>
+</main>
+
+<footer>
+  <p>© 2026 LucasMdev · <a href="/">← Retour au blog</a> · <a href="mailto:lucasmdev@proton.me">Contact</a></p>
+</footer>
+
+</body>
+</html>
