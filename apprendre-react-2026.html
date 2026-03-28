@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apprendre React en 2026 : Guide Complet pour Débutants</title>
+<meta name="description" content="Comment apprendre React en 2026 ? Guide complet pour débutants : prérequis, concepts clés, ressources gratuites et payantes, projet pratique. De zéro à développeur React.">
+<link rel="canonical" href="https://lucasmdevdev.github.io/apprendre-react-2026.html">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav><a href="index.html">← Accueil</a></nav>
+
+<article>
+<h1>Apprendre React en 2026 : Guide Complet pour Débutants</h1>
+<p class="meta">Par Lucas M Dev — 28 mars 2026 — 14 min de lecture</p>
+
+<p>React reste en 2026 le framework frontend le plus demandé dans les offres d'emploi. Si vous voulez travailler en développement web, apprendre React est une priorité. Ce guide vous explique comment aller de zéro à développeur React compétent, en 2026.</p>
+
+<div class="toc">
+<h2>Sommaire</h2>
+<ul>
+<li><a href="#prerequis">Les prérequis avant React</a></li>
+<li><a href="#concepts">Les concepts clés à maîtriser</a></li>
+<li><a href="#roadmap">Roadmap d'apprentissage</a></li>
+<li><a href="#ressources">Meilleures ressources 2026</a></li>
+<li><a href="#projet">Votre premier projet React</a></li>
+<li><a href="#nextjs">React + Next.js : l'étape suivante</a></li>
+</ul>
+</div>
+
+<h2 id="prerequis">Les prérequis avant de commencer React</h2>
+
+<p>React est une bibliothèque JavaScript. Avant de vous lancer, vous devez avoir une base solide en :</p>
+
+<ul>
+<li><strong>HTML/CSS</strong> : maîtrise des bases (balises, flexbox, grid, responsive)</li>
+<li><strong>JavaScript ES6+</strong> : les destructuring, spread operator, arrow functions, promesses, async/await, modules</li>
+<li><strong>La manipulation du DOM</strong> : comprendre ce que React fait (abstraction du DOM)</li>
+</ul>
+
+<p>Si vous débutez vraiment de zéro, passez 2-3 semaines sur JavaScript avant React. Le livre <em>Eloquent JavaScript</em> (gratuit en ligne) est excellent.</p>
+
+<h2 id="concepts">Les concepts clés de React en 2026</h2>
+
+<h3>1. Composants — La brique de base</h3>
+<p>React découpe l'interface en composants réutilisables. Chaque composant est une fonction JavaScript qui retourne du JSX.</p>
+
+<pre><code>// Composant simple en 2026
+function BoutonLike({ count, onClick }) {
+  return (
+    &lt;button onClick={onClick} className="btn-like"&gt;
+      ❤️ {count} likes
+    &lt;/button&gt;
+  );
+}
+
+// Utilisation
+function Article() {
+  const [likes, setLikes] = React.useState(0);
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Mon article&lt;/h1&gt;
+      &lt;BoutonLike count={likes} onClick={() =&gt; setLikes(l =&gt; l + 1)} /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<h3>2. Props — Passer des données aux composants</h3>
+<p>Les props sont les paramètres d'un composant. Ils permettent de passer des données du parent vers l'enfant.</p>
+
+<h3>3. State avec useState — Données qui changent</h3>
+<p>Le state est ce qui rend un composant dynamique. Quand le state change, React re-rend le composant automatiquement.</p>
+
+<pre><code>function Compteur() {
+  const [count, setCount] = React.useState(0);
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Compteur : {count}&lt;/p&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;+1&lt;/button&gt;
+      &lt;button onClick={() =&gt; setCount(count - 1)}&gt;-1&lt;/button&gt;
+      &lt;button onClick={() =&gt; setCount(0)}&gt;Reset&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<h3>4. useEffect — Les effets de bord</h3>
+<p>useEffect permet d'exécuter du code quand le composant se monte, se met à jour, ou se démonte (appels API, abonnements, timers).</p>
+
+<pre><code>function ListeUtilisateurs() {
+  const [users, setUsers] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() =&gt; {
+    fetch('/api/users')
+      .then(r =&gt; r.json())
+      .then(data =&gt; {
+        setUsers(data);
+        setLoading(false);
+      });
+  }, []); // [] = s'exécute une seule fois au montage
+
+  if (loading) return &lt;p&gt;Chargement...&lt;/p&gt;;
+  return &lt;ul&gt;{users.map(u =&gt; &lt;li key={u.id}&gt;{u.name}&lt;/li&gt;)}&lt;/ul&gt;;
+}</code></pre>
+
+<h3>5. Les Hooks personnalisés</h3>
+<p>En 2026, les hooks sont la façon standard d'abstraire la logique réutilisable. Créer vos propres hooks est une compétence clé.</p>
+
+<pre><code>// Hook personnalisé pour fetch les données
+function useFetch(url) {
+  const [data, setData] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
+
+  React.useEffect(() =&gt; {
+    fetch(url)
+      .then(r =&gt; r.json())
+      .then(setData)
+      .catch(setError)
+      .finally(() =&gt; setLoading(false));
+  }, [url]);
+
+  return { data, loading, error };
+}
+
+// Utilisation
+function MonComposant() {
+  const { data, loading, error } = useFetch('/api/articles');
+  if (loading) return &lt;Spinner /&gt;;
+  if (error) return &lt;Erreur message={error.message} /&gt;;
+  return &lt;Liste items={data} /&gt;;
+}</code></pre>
+
+<h3>6. Context API — État global sans Redux</h3>
+<p>Pour partager des données entre composants sans prop drilling, utilisez le Context API ou des bibliothèques comme Zustand (plus léger que Redux).</p>
+
+<h2 id="roadmap">Roadmap d'apprentissage React 2026</h2>
+
+<h3>Semaine 1-2 : Les bases</h3>
+<ul>
+<li>JSX et rendu de composants</li>
+<li>Props et state (useState)</li>
+<li>Gestion des événements</li>
+<li>Rendu conditionnel et listes</li>
+</ul>
+
+<h3>Semaine 3-4 : Les hooks essentiels</h3>
+<ul>
+<li>useEffect et le cycle de vie</li>
+<li>useRef, useCallback, useMemo</li>
+<li>Hooks personnalisés</li>
+<li>Context API</li>
+</ul>
+
+<h3>Mois 2 : Écosystème React</h3>
+<ul>
+<li>React Router (navigation entre pages)</li>
+<li>TanStack Query / SWR (fetching de données)</li>
+<li>Tailwind CSS pour le style</li>
+<li>TypeScript avec React (fortement recommandé)</li>
+</ul>
+
+<h3>Mois 3 : Next.js</h3>
+<ul>
+<li>Server Components et Client Components</li>
+<li>App Router (Next.js 13+)</li>
+<li>SSR, SSG, ISR — rendu côté serveur</li>
+<li>API Routes</li>
+</ul>
+
+<h2 id="ressources">Meilleures ressources pour apprendre React en 2026</h2>
+
+<h3>Gratuit</h3>
+<ul>
+<li><strong>Documentation officielle React</strong> : <a href="https://react.dev" rel="nofollow" target="_blank">react.dev</a> — réécrite en 2023, excellente avec des exercices</li>
+<li><strong>Full Stack Open</strong> : cours complet gratuit de l'Université d'Helsinki (React, Node.js, TypeScript)</li>
+<li><strong>Josh W Comeau's blog</strong> : articles de très haute qualité sur React et CSS</li>
+<li><strong>YouTube — Traversy Media, Fireship, Kevin Powell</strong> : vidéos excellentes et gratuites</li>
+</ul>
+
+<h3>Payant (les meilleures formations)</h3>
+<ul>
+<li><strong>The Joy of React (Josh W Comeau, ~150$)</strong> : considérée comme la meilleure formation React disponible. Animations, projets concrets, compréhension en profondeur.</li>
+<li><strong>Epic React (Kent C. Dodds, ~400$)</strong> : formation complète et avancée pour React professionnel</li>
+<li><strong>Udemy — React 18 pour les développeurs</strong> (~15€ en promo) : bonne option abordable pour démarrer</li>
+<li><strong>Frontend Masters</strong> ($39/mois) : plusieurs cours React de qualité</li>
+</ul>
+
+<h3>Mon conseil pour débuter</h3>
+<p>Commencez par la <strong>documentation officielle react.dev</strong> (gratuite) en faisant tous les exercices. Ensuite, choisissez un projet concret à construire (todo list, clone d'une appli connue, dashboard). La pratique est 10x plus efficace que regarder des vidéos.</p>
+
+<h2 id="projet">Votre premier projet React concret</h2>
+
+<p>Voici un projet qui vous fera pratiquer tous les concepts essentiels :</p>
+
+<p><strong>Idée : Application de gestion de tâches avec API</strong></p>
+<ul>
+<li>Liste de tâches avec ajout/suppression (useState)</li>
+<li>Persistance avec localStorage (useEffect)</li>
+<li>Filtres (toutes / actives / complétées)</li>
+<li>Connexion à une API externe (JSONPlaceholder pour tester)</li>
+<li>Style avec Tailwind CSS</li>
+</ul>
+
+<p>Ce projet vous prendra 10-20 heures et vous apprendra plus que 50 heures de tutoriels passifs.</p>
+
+<h2 id="nextjs">React + Next.js : L'étape logique en 2026</h2>
+
+<p>React seul est parfait pour les SPAs (Single Page Applications). Mais en 2026, <strong>Next.js est devenu le standard pour les applications React en production</strong>. Il ajoute :</p>
+
+<ul>
+<li><strong>Server-Side Rendering</strong> : meilleur SEO et performance initiale</li>
+<li><strong>Static Generation</strong> : pages ultra-rapides générées à la compilation</li>
+<li><strong>App Router</strong> : routing basé sur les dossiers, plus intuitif</li>
+<li><strong>Server Actions</strong> : mutations côté serveur sans API Route séparée</li>
+<li><strong>Déploiement simplifié sur Vercel</strong></li>
+</ul>
+
+<p>Apprenez React d'abord (2-3 mois), puis passez à Next.js. L'investissement est rentable — Next.js est dans 80%+ des offres d'emploi React en 2026.</p>
+
+<hr>
+<p><a href="typescript-guide-debutant-2026.html">→ TypeScript pour débutants en 2026</a></p>
+<p><a href="deployer-app-gratuitement-2026.html">→ Déployer votre app React gratuitement</a></p>
+</article>
+<footer><p>© 2026 LucasMDev — <a href="index.html">Accueil</a> | <a href="ressources.html">Ressources</a></p></footer>
+</body>
+</html>
