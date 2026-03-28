@@ -32,6 +32,14 @@
     <p>Guides pratiques et comparatifs honnêtes pour les développeurs et créateurs qui veulent travailler mieux, pas plus.</p>
   </section>
 
+  <section class="search-section">
+    <div class="search-wrapper">
+      <input type="search" id="blog-search" placeholder="Rechercher un article..." autocomplete="off">
+      <span class="search-icon">🔍</span>
+    </div>
+    <p id="search-count" style="display:none;"></p>
+  </section>
+
   <section>
     <div class="articles-grid">
 
@@ -215,6 +223,33 @@
   <p>© 2026 LucasMdev · <a href="/ressources.html">Ressources</a>
       <a href="mailto:lucasmdev@proton.me">Contact</a> · Certains liens sont des liens partenaires.</p>
 </footer>
+
+
+<script>
+(function() {
+  const input = document.getElementById('blog-search');
+  const cards = document.querySelectorAll('.articles-grid .card');
+  const counter = document.getElementById('search-count');
+  if (!input) return;
+
+  input.addEventListener('input', function() {
+    const q = this.value.toLowerCase().trim();
+    let visible = 0;
+    cards.forEach(function(card) {
+      const text = card.textContent.toLowerCase();
+      const match = !q || text.includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    if (q) {
+      counter.style.display = '';
+      counter.textContent = visible + ' article' + (visible !== 1 ? 's' : '') + ' trouvé' + (visible !== 1 ? 's' : '');
+    } else {
+      counter.style.display = 'none';
+    }
+  });
+})();
+</script>
 
 </body>
 </html>

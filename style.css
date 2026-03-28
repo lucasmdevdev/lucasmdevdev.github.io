@@ -330,3 +330,30 @@ footer a { color: var(--accent); text-decoration: none; }
   color: var(--accent);
   border-color: var(--accent);
 }
+
+/* ---- Search ---- */
+.search-section { margin-bottom: 8px; }
+.search-wrapper { position: relative; max-width: 500px; }
+#blog-search {
+  width: 100%;
+  padding: 12px 16px 12px 44px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color .15s;
+  box-sizing: border-box;
+}
+#blog-search:focus { border-color: var(--accent); }
+#blog-search::placeholder { color: var(--muted); }
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: .95rem;
+}
+#search-count { margin-top: 8px; font-size: .85rem; color: var(--muted); }
