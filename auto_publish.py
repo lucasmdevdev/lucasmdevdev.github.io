@@ -248,6 +248,20 @@ def main():
     update_sitemap(filename, date_str)
     log("Sitemap mis à jour")
 
+    # Ajouter Schema.org JSON-LD au nouvel article
+    try:
+        result = subprocess.run(
+            ["python3", "-c",
+             f"import sys; sys.path.insert(0, '{BLOG_DIR}'); "
+             f"from add_schema import add_schema_to_article; "
+             f"from pathlib import Path; "
+             f"add_schema_to_article(Path('{BLOG_DIR}/{filename}'))"],
+            cwd=BLOG_DIR, capture_output=True, text=True
+        )
+        log(f"Schema.org: {result.stdout.strip() or 'OK'}")
+    except Exception as e:
+        log(f"AVERTISSEMENT Schema: {e}")
+
     # Régénérer le flux RSS
     try:
         result = subprocess.run(
