@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Créer un blog gratuit avec GitHub Pages en 2026 : guide complet — LucasMdev</title>
+  <meta name="description" content="Comment créer un blog gratuit avec GitHub Pages en 2026. Hébergement 0€, HTTPS automatique, déploiement en 10 minutes. Guide pas à pas avec ou sans domaine personnalisé.">
+  <meta name="author" content="Lucas M.">
+  <meta property="og:title" content="Créer un blog gratuit avec GitHub Pages en 2026 : guide complet">
+  <meta property="og:description" content="Hébergement 0€, HTTPS automatique. Votre site en ligne en 10 minutes.">
+  <meta property="og:type" content="article">
+  <link rel="canonical" href="https://lucasmdevdev.github.io/github-pages-blog-gratuit-2026.html">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">Lucas<span>M</span>.dev</a>
+    <nav>
+      <a href="/">Blog</a>
+      <a href="mailto:lucasmdev@proton.me">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <a href="/" class="back-link">← Retour au blog</a>
+
+  <article>
+    <header class="article-header">
+      <div class="meta">
+        <span>Tutoriel</span>
+        <span>GitHub</span>
+        <span>Hébergement</span>
+        28 mars 2026 · 6 min de lecture
+      </div>
+      <h1>Créer un blog gratuit avec GitHub Pages en 2026 : guide complet</h1>
+      <p class="intro">GitHub Pages offre un hébergement gratuit, un HTTPS automatique, et une disponibilité à 99.9%. Voici comment créer votre blog en 10 minutes — même sans expérience avec Git.</p>
+    </header>
+
+    <div class="article-content">
+
+      <h2>Pourquoi GitHub Pages ?</h2>
+      <ul>
+        <li><strong>100% gratuit</strong> — hébergement, SSL, bande passante</li>
+        <li><strong>Performant</strong> — CDN mondial de GitHub</li>
+        <li><strong>Versionné</strong> — chaque modification est tracée dans Git</li>
+        <li><strong>Domaine personnalisé</strong> supporté (optionnel)</li>
+        <li><strong>Aucun serveur à gérer</strong></li>
+      </ul>
+      <p>L'inconvénient : pas de contenu dynamique (base de données, commentaires natifs). Mais pour un blog, c'est parfait.</p>
+
+      <h2>Étape 1 — Créer un compte GitHub</h2>
+      <p>Rendez-vous sur <strong>github.com/signup</strong> et créez un compte. Choisissez votre nom d'utilisateur avec soin — il deviendra l'URL de votre blog : <code>votrenom.github.io</code>.</p>
+
+      <h2>Étape 2 — Créer le repo</h2>
+      <p>Dans GitHub, créez un nouveau repository avec ce nom exact : <code>votrenom.github.io</code> (remplacez "votrenom" par votre username exact).</p>
+      <p>Cochez "Add a README file" pour l'initialiser.</p>
+
+      <h2>Étape 3 — Créer votre première page</h2>
+      <p>Créez un fichier <code>index.html</code> dans le repo :</p>
+      <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Mon blog&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Bienvenue sur mon blog !&lt;/h1&gt;
+  &lt;p&gt;Premier article en cours...&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <h2>Étape 4 — Activer GitHub Pages</h2>
+      <ol>
+        <li>Allez dans Settings de votre repo</li>
+        <li>Section "Pages" dans le menu gauche</li>
+        <li>Source : "Deploy from a branch"</li>
+        <li>Branch : main / (root)</li>
+        <li>Cliquez Save</li>
+      </ol>
+      <p>Après 1-2 minutes, votre site est accessible sur <code>https://votrenom.github.io</code>.</p>
+
+      <h2>Étape 5 — Ajouter un domaine personnalisé (optionnel)</h2>
+      <p>Si vous voulez <code>monblog.fr</code> plutôt que <code>votrenom.github.io</code> :</p>
+      <ol>
+        <li>Achetez un domaine (~10€/an)</li>
+        <li>Dans votre registrar, ajoutez un CNAME : <code>www → votrenom.github.io</code></li>
+        <li>Dans GitHub Pages Settings, entrez votre domaine</li>
+        <li>GitHub génère automatiquement un certificat SSL</li>
+      </ol>
+
+      <h2>Où acheter un domaine pas cher ?</h2>
+      <table>
+        <thead>
+          <tr><th>Registrar</th><th>Prix .fr/an</th><th>Prix .com/an</th><th>Note</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>OVH</td><td>~7€</td><td>~10€</td><td>Français, fiable</td></tr>
+          <tr><td>Hostinger</td><td>~3€ (promo)</td><td>~10€</td><td>Bon rapport qualité/prix</td></tr>
+          <tr><td>Namecheap</td><td>—</td><td>~10€</td><td>Interface simple</td></tr>
+          <tr><td>Infomaniak</td><td>~7€</td><td>~12€</td><td>Suisse, éco-responsable</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Aller plus loin : générateur de site statique</h2>
+      <p>Écrire chaque article en HTML pur devient fastidieux. Pour un blog avec beaucoup d'articles, utilisez un générateur de site statique :</p>
+      <ul>
+        <li><strong>Jekyll</strong> — nativement supporté par GitHub Pages, articles en Markdown</li>
+        <li><strong>Hugo</strong> — ultra-rapide, thèmes nombreux</li>
+        <li><strong>Eleventy (11ty)</strong> — flexible, facile pour les devs JS</li>
+      </ul>
+      <p>Ces outils convertissent vos fichiers Markdown en HTML automatiquement à chaque push.</p>
+
+      <h2>Récapitulatif</h2>
+      <table>
+        <thead>
+          <tr><th>Étape</th><th>Action</th><th>Temps</th><th>Coût</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Créer compte GitHub</td><td>2 min</td><td>Gratuit</td></tr>
+          <tr><td>2</td><td>Créer repo</td><td>1 min</td><td>Gratuit</td></tr>
+          <tr><td>3</td><td>Créer index.html</td><td>5 min</td><td>Gratuit</td></tr>
+          <tr><td>4</td><td>Activer Pages</td><td>1 min</td><td>Gratuit</td></tr>
+          <tr><td>5 (opt.)</td><td>Domaine personnalisé</td><td>10 min</td><td>~10€/an</td></tr>
+        </tbody>
+      </table>
+
+      <hr>
+      <p><em>Des questions sur votre setup ? Décrivez votre cas en commentaire.</em></p>
+
+    </div>
+  </article>
+</main>
+
+<footer>
+  <p>© 2026 LucasMdev · <a href="/">← Retour au blog</a> · <a href="mailto:lucasmdev@proton.me">Contact</a></p>
+</footer>
+
+</body>
+</html>
