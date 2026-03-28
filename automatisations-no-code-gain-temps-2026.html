@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7 automatisations no-code qui font gagner 5h par semaine en 2026</title>
+  <meta name="description" content="Voici les 7 workflows Make.com et Zapier que j'ai mis en place et qui me font gagner 5 heures par semaine. Guide pratique avec étapes détaillées.">
+  <meta name="author" content="Lucas M.">
+  <meta name="date" content="2026-03-30">
+  <meta name="tags" content="Automatisation,No-code,Productivité">
+  <link rel="canonical" href="https://lucasmdevdev.github.io/automatisations-no-code-gain-temps-2026.html">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">Lucas<span>M</span>.dev</a>
+    <nav>
+      <a href="/">Blog</a>
+      <a href="mailto:lucasmdev@proton.me">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<article class="article-content">
+
+  <div class="article-header">
+    <div class="article-meta">
+      <span>Automatisation</span>
+      <span>No-code</span>
+      <span>Productivité</span>
+      30 mars 2026
+    </div>
+    <h1>7 automatisations no-code qui font gagner 5h par semaine en 2026</h1>
+    <p class="article-intro">J'ai passé 2 semaines à documenter toutes mes tâches répétitives. Voici les 7 automatisations qui m'ont libéré le plus de temps — et comment les reproduire en moins d'une heure.</p>
+  </div>
+
+  <p>On parle beaucoup d'automatisation, mais la plupart des guides restent vagues. Moi, je vais vous donner les workflows exacts que j'utilise, avec les étapes concrètes pour les reproduire. Tous fonctionnent avec Make.com (plan gratuit pour la plupart).</p>
+
+  <h2>Pourquoi Make.com plutôt que Zapier ?</h2>
+
+  <p>Court réponse : Make offre 1000 opérations gratuites par mois contre 100 pour Zapier. Et la logique visuelle de Make est bien plus puissante pour les workflows complexes. Si vous n'avez pas encore de compte, <a href="https://make.com" rel="nofollow">créez-en un gratuitement ici</a>.</p>
+
+  <h2>Automatisation #1 — Tri automatique des emails (45 min/semaine)</h2>
+
+  <p><strong>Le problème :</strong> Je passais 45 minutes par semaine à trier mes newsletters, emails clients, et alertes dans mes dossiers.</p>
+
+  <p><strong>La solution :</strong> Un workflow Gmail + Google Sheets qui catégorise automatiquement chaque email entrant.</p>
+
+  <h3>Comment le mettre en place</h3>
+  <ol>
+    <li>Dans Make : créez un scénario "Gmail → Watch Emails"</li>
+    <li>Ajoutez un module "Router" avec 3 branches : newsletters, clients, alertes</li>
+    <li>Chaque branche applique un label Gmail via "Gmail → Add Label"</li>
+    <li>Optionnel : log dans Google Sheets pour avoir une vue d'ensemble</li>
+  </ol>
+
+  <p><strong>Gain réel :</strong> 40-50 min/semaine. ROI immédiat.</p>
+
+  <h2>Automatisation #2 — Backup quotidien des notes (2h/an évitées)</h2>
+
+  <p><strong>Le problème :</strong> Perdre des notes Notion c'est catastrophique. Et faire des backups manuels, personne ne le fait vraiment.</p>
+
+  <p><strong>La solution :</strong> Un cron Make qui exporte mes pages Notion importantes vers Google Drive tous les soirs à 23h.</p>
+
+  <h3>Comment le mettre en place</h3>
+  <ol>
+    <li>Créez un scénario avec trigger "Schedule" (tous les jours à 23h)</li>
+    <li>Module "Notion → Get Page" pour chaque page critique</li>
+    <li>Module "Google Drive → Upload File" avec le contenu au format Markdown</li>
+  </ol>
+
+  <p><strong>Gain réel :</strong> Pas de gain temps direct, mais une tranquillité d'esprit qui vaut de l'or.</p>
+
+  <h2>Automatisation #3 — Factures auto depuis les emails (1h/mois)</h2>
+
+  <p><strong>Le problème :</strong> Chaque mois, je devais retrouver manuellement toutes mes factures reçues par email et les copier dans mon dossier compta.</p>
+
+  <p><strong>La solution :</strong> Détection des emails avec pièces jointes PDF + nom "facture" ou "invoice" → copie automatique dans Google Drive.</p>
+
+  <h3>Comment le mettre en place</h3>
+  <ol>
+    <li>Gmail → Watch Emails avec filtre : has:attachment filename:pdf</li>
+    <li>Filtre Make : le sujet contient "facture" OU "invoice" OU "receipt"</li>
+    <li>Gmail → Get Email Attachments</li>
+    <li>Google Drive → Upload File dans le dossier "Compta/2026"</li>
+  </ol>
+
+  <p><strong>Gain réel :</strong> 1h/mois. Et zéro facture oubliée.</p>
+
+  <h2>Automatisation #4 — Veille techno automatique (3h/semaine)</h2>
+
+  <p><strong>Le problème :</strong> Je voulais rester à jour sur l'IA et l'automatisation sans passer des heures sur Twitter/HackerNews.</p>
+
+  <p><strong>La solution :</strong> Un digest quotidien RSS → synthèse IA → email résumé à 8h du matin.</p>
+
+  <h3>Comment le mettre en place</h3>
+  <ol>
+    <li>Trigger "Schedule" à 7h45 chaque matin</li>
+    <li>RSS → Watch Items pour 5-10 flux (HackerNews, The Batch, etc.)</li>
+    <li>Filtre sur les items des dernières 24h</li>
+    <li>OpenAI → Generate Text pour créer un résumé en 5 points</li>
+    <li>Gmail → Send Email avec le digest formaté</li>
+  </ol>
+
+  <p><strong>Gain réel :</strong> Je lis mon résumé en 5 minutes au lieu de 3h de scroll.</p>
+
+  <h2>Automatisation #5 — Rapport client automatique (2h/semaine)</h2>
+
+  <p><strong>Le problème :</strong> Chaque semaine, je devais compiler les métriques de mes projets et envoyer un rapport à mes clients.</p>
+
+  <p><strong>La solution :</strong> Collecte automatique des données Google Analytics + GitHub + Notion → rapport PDF généré automatiquement.</p>
+
+  <h3>Comment le mettre en place</h3>
+  <ol>
+    <li>Trigger "Schedule" le vendredi à 17h</li>
+    <li>Google Analytics → Get Report (visiteurs semaine)</li>
+    <li>GitHub → List Commits (activité code)</li>
+    <li>Formater les données dans un template Google Docs</li>
+    <li>Convertir en PDF et envoyer par Gmail</li>
+  </ol>
+
+  <p><strong>Gain réel :</strong> 2h/semaine, soit 8h/mois.</p>
+
+  <h2>Automatisation #6 — Social media batching (1.5h/semaine)</h2>
+
+  <p><strong>Le problème :</strong> Publier régulièrement sur LinkedIn prenait trop de temps et je procrastinais.</p>
+
+  <p><strong>La solution :</strong> Un Google Sheet comme "content calendar" + Make qui publie automatiquement les posts planifiés.</p>
+
+  <h3>Comment le mettre en place</h3>
+  <ol>
+    <li>Google Sheet avec colonnes : Date | Contenu | Plateforme | Statut</li>
+    <li>Make → Schedule toutes les heures</li>
+    <li>Google Sheets → Search Rows : statut = "prêt" ET date &lt;= aujourd'hui</li>
+    <li>LinkedIn API ou Buffer → Create Post</li>
+    <li>Mettre à jour le statut → "publié"</li>
+  </ol>
+
+  <p><strong>Gain réel :</strong> Je prépare tous mes posts le dimanche en 30 min, plus besoin d'y penser la semaine.</p>
+
+  <h2>Automatisation #7 — Onboarding client automatisé (3h par client)</h2>
+
+  <p><strong>Le problème :</strong> Quand un nouveau client signe, je devais manuellement créer le dossier, envoyer les accès, créer le projet Notion, envoyer l'email de bienvenue...</p>
+
+  <p><strong>La solution :</strong> Un webhook depuis ma page de paiement Stripe → séquence complète d'onboarding automatisé.</p>
+
+  <h3>Comment le mettre en place</h3>
+  <ol>
+    <li>Stripe → Webhook trigger (paiement réussi)</li>
+    <li>Google Drive → Create Folder "Client - [nom]"</li>
+    <li>Notion → Create Page (projet client depuis template)</li>
+    <li>Gmail → Send Email (email de bienvenue personnalisé)</li>
+    <li>Optionnel : Slack → message dans #clients-nouveaux</li>
+  </ol>
+
+  <p><strong>Gain réel :</strong> 2-3h par nouveau client. Quand vous avez 5-10 clients par mois, c'est massif.</p>
+
+  <h2>Récapitulatif des gains</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Automatisation</th>
+        <th>Gain hebdo</th>
+        <th>Difficulté</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Tri emails</td>
+        <td>45 min</td>
+        <td>Facile</td>
+      </tr>
+      <tr>
+        <td>Backup Notion</td>
+        <td>Tranquillité</td>
+        <td>Facile</td>
+      </tr>
+      <tr>
+        <td>Factures auto</td>
+        <td>15 min</td>
+        <td>Facile</td>
+      </tr>
+      <tr>
+        <td>Veille techno</td>
+        <td>2h45</td>
+        <td>Moyen</td>
+      </tr>
+      <tr>
+        <td>Rapport client</td>
+        <td>2h</td>
+        <td>Moyen</td>
+      </tr>
+      <tr>
+        <td>Social media</td>
+        <td>1h30</td>
+        <td>Facile</td>
+      </tr>
+      <tr>
+        <td>Onboarding</td>
+        <td>Variable</td>
+        <td>Avancé</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Total : ~7h par semaine</strong> récupérées sur des tâches sans valeur ajoutée.</p>
+
+  <h2>Par où commencer ?</h2>
+
+  <p>Si vous n'avez jamais fait d'automatisation, commencez par <strong>#1 (tri emails)</strong> et <strong>#6 (social media)</strong>. Ce sont les plus simples et les plus visibles. Comptez 1h de setup pour les deux.</p>
+
+  <p>Une fois à l'aise, attaquez <strong>#4 (veille techno)</strong> — c'est le workflow qui m'a le plus changé la vie.</p>
+
+  <div class="article-cta">
+    <p><a href="https://make.com" rel="nofollow">→ Créer un compte Make.com gratuit</a> (1000 opérations/mois offertes)</p>
+    <p><em>Cet article contient des liens partenaires. Je recommande uniquement des outils que j'utilise vraiment.</em></p>
+  </div>
+
+</article>
+</main>
+
+<footer>
+  <p>© 2026 LucasMdev · <a href="mailto:lucasmdev@proton.me">Contact</a> · Certains liens sont des liens partenaires.</p>
+</footer>
+
+</body>
+</html>
