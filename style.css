@@ -112,12 +112,14 @@ main {
 
 /* ---- Article page ---- */
 .article-header { margin-bottom: 40px; }
-.article-header .meta {
+.article-header .meta,
+.article-meta {
   font-size: .85rem;
   color: var(--muted);
   margin-bottom: 16px;
 }
-.article-header .meta span {
+.article-header .meta span,
+.article-meta span {
   background: var(--bg-alt);
   border: 1px solid var(--border);
   padding: 3px 10px;
@@ -131,10 +133,24 @@ main {
   letter-spacing: -.5px;
   margin-bottom: 16px;
 }
-.article-header .intro {
+.article-header .intro,
+.article-intro {
   font-size: 1.1rem;
   color: var(--muted);
   line-height: 1.6;
+  margin-bottom: 28px;
+}
+.article-cta {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-top: 40px;
+  font-size: .95rem;
+}
+.article-cta a {
+  color: var(--accent);
+  font-weight: 600;
 }
 
 .article-content h2 {
