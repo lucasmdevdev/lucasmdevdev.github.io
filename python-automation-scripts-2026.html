@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10 scripts Python qui automatisent votre vie de développeur en 2026</title>
+  <meta name="description" content="10 scripts Python prêts à l'emploi pour automatiser les tâches répétitives : renommage de fichiers, envoi d'emails, scraping, monitoring. Copier-coller et adapter.">
+  <meta name="author" content="Lucas M.">
+  <meta name="date" content="2026-04-01">
+  <meta name="tags" content="Python,Automatisation,Outils">
+  <link rel="canonical" href="https://lucasmdevdev.github.io/python-automation-scripts-2026.html">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">Lucas<span>M</span>.dev</a>
+    <nav>
+      <a href="/">Blog</a>
+      <a href="mailto:lucasmdev@proton.me">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<article class="article-content">
+
+  <div class="article-header">
+    <div class="article-meta">
+      <span>Python</span>
+      <span>Automatisation</span>
+      <span>Outils</span>
+      1 avril 2026
+    </div>
+    <h1>10 scripts Python qui automatisent votre vie de développeur en 2026</h1>
+    <p class="article-intro">10 scripts Python prêts à l'emploi pour automatiser les tâches répétitives : renommage de fichiers, envoi d'emails, scraping, monitoring. Copier-coller et adapter.</p>
+  </div>
+
+  <p>Python est le langage de l'automatisation. En quelques dizaines de lignes, vous pouvez éliminer des heures de travail manuel. Voici 10 scripts que j'utilise vraiment, prêts à être adaptés à votre situation.</p>
+
+<h2>1. Renommage en masse de fichiers</h2>
+<pre><code>import os
+from pathlib import Path
+
+def rename_files(folder, old_pattern, new_pattern):
+    for f in Path(folder).glob(f"*{old_pattern}*"):
+        new_name = f.name.replace(old_pattern, new_pattern)
+        f.rename(f.parent / new_name)
+        print(f"Renommé: {f.name} → {new_name}")
+
+# Exemple: remplacer "IMG_" par "photo_" dans /home/user/Photos
+rename_files("/home/user/Photos", "IMG_", "photo_")</code></pre>
+
+<h2>2. Surveillance de dossier + alerte email</h2>
+<pre><code>import time
+import smtplib
+from email.message import EmailMessage
+from pathlib import Path
+
+WATCHED_FOLDER = "/home/user/Downloads"
+SMTP_SERVER = "smtp.gmail.com"
+EMAIL_FROM = "vous@gmail.com"
+EMAIL_TO = "vous@gmail.com"
+EMAIL_PASSWORD = os.environ["GMAIL_APP_PASSWORD"]
+
+def send_alert(filename):
+    msg = EmailMessage()
+    msg["Subject"] = f"Nouveau fichier : {filename}"
+    msg["From"] = EMAIL_FROM
+    msg["To"] = EMAIL_TO
+    msg.set_content(f"Nouveau fichier détecté : {filename}")
+    with smtplib.SMTP_SSL(SMTP_SERVER, 465) as s:
+        s.login(EMAIL_FROM, EMAIL_PASSWORD)
+        s.send_message(msg)
+
+known_files = set(os.listdir(WATCHED_FOLDER))
+while True:
+    current = set(os.listdir(WATCHED_FOLDER))
+    new_files = current - known_files
+    for f in new_files:
+        print(f"Nouveau fichier: {f}")
+        send_alert(f)
+    known_files = current
+    time.sleep(5)</code></pre>
+
+<h2>3. Backup automatique vers un dossier daté</h2>
+<pre><code>import shutil
+import datetime
+from pathlib import Path
+
+def backup(source_dir, backup_root):
+    today = datetime.date.today().isoformat()
+    dest = Path(backup_root) / today
+    dest.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(source_dir, dest / Path(source_dir).name, dirs_exist_ok=True)
+    print(f"Backup créé: {dest}")
+
+backup("/home/user/projets", "/home/user/backups")</code></pre>
+
+<h2>4. Downloader de pages web en masse</h2>
+<pre><code>import requests
+from pathlib import Path
+
+URLS = [
+    "https://example.com/page1",
+    "https://example.com/page2",
+]
+
+OUTPUT_DIR = Path("/tmp/pages")
+OUTPUT_DIR.mkdir(exist_ok=True)
+
+for i, url in enumerate(URLS):
+    response = requests.get(url, timeout=10)
+    if response.ok:
+        filename = OUTPUT_DIR / f"page_{i+1}.html"
+        filename.write_text(response.text)
+        print(f"Téléchargé: {url}")
+    else:
+        print(f"Erreur {response.status_code}: {url}")</code></pre>
+
+<h2>5. Lecture et traitement de CSV volumineux</h2>
+<pre><code>import csv
+from collections import defaultdict
+
+def process_csv(filepath):
+    stats = defaultdict(float)
+    with open(filepath, newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            category = row.get("category", "unknown")
+            amount = float(row.get("amount", 0))
+            stats[category] += amount
+    return dict(sorted(stats.items(), key=lambda x: x[1], reverse=True))
+
+result = process_csv("transactions.csv")
+for cat, total in result.items():
+    print(f"{cat}: {total:.2f}€")</code></pre>
+
+<h2>6. Générateur de mots de passe forts</h2>
+<pre><code>import secrets
+import string
+
+def generate_password(length=20, symbols=True):
+    chars = string.ascii_letters + string.digits
+    if symbols:
+        chars += "!@#$%^&*"
+    return "".join(secrets.choice(chars) for _ in range(length))
+
+for i in range(5):
+    print(generate_password(20))</code></pre>
+
+<h2>7. Scraper de prix (e-commerce)</h2>
+<pre><code>import requests
+from bs4 import BeautifulSoup
+
+def get_price(url, selector):
+    headers = {"User-Agent": "Mozilla/5.0"}
+    response = requests.get(url, headers=headers, timeout=10)
+    soup = BeautifulSoup(response.text, "html.parser")
+    element = soup.select_one(selector)
+    return element.text.strip() if element else "Non trouvé"
+
+# Adapter le sélecteur CSS à chaque site
+price = get_price("https://example.com/produit", ".price-tag")
+print(f"Prix: {price}")</code></pre>
+
+<h2>8. Conversion PDF → texte</h2>
+<pre><code># pip install pypdf2
+import PyPDF2
+from pathlib import Path
+
+def pdf_to_text(pdf_path):
+    text = ""
+    with open(pdf_path, "rb") as f:
+        reader = PyPDF2.PdfReader(f)
+        for page in reader.pages:
+            text += page.extract_text() + "\n"
+    return text
+
+content = pdf_to_text("document.pdf")
+print(content[:500])</code></pre>
+
+<h2>9. Resize en masse d'images</h2>
+<pre><code># pip install pillow
+from PIL import Image
+from pathlib import Path
+
+def resize_images(folder, max_width=1200, max_height=800):
+    for img_path in Path(folder).glob("*.{jpg,jpeg,png}"):
+        with Image.open(img_path) as img:
+            img.thumbnail((max_width, max_height), Image.LANCZOS)
+            img.save(img_path)
+            print(f"Redimensionné: {img_path.name}")
+
+resize_images("/home/user/photos")</code></pre>
+
+<h2>10. Rappels automatiques par email</h2>
+<pre><code>import schedule
+import time
+import smtplib
+from email.message import EmailMessage
+
+REMINDERS = [
+    {"time": "09:00", "subject": "Stand-up daily", "body": "N'oublie pas le stand-up à 9h30 !"},
+    {"time": "17:30", "subject": "Bilan journée", "body": "Pense à logger tes tâches du jour."},
+]
+
+def send_reminder(subject, body):
+    # ... (code email identique au script #2)
+    print(f"Rappel envoyé: {subject}")
+
+for r in REMINDERS:
+    schedule.every().day.at(r["time"]).do(send_reminder, r["subject"], r["body"])
+
+while True:
+    schedule.run_pending()
+    time.sleep(30)</code></pre>
+
+<h2>Comment les adapter à vos besoins</h2>
+<p>Chaque script est conçu pour être minimal et lisible. Pour les adapter :</p>
+<ol>
+  <li>Changez les chemins de fichiers et URLs</li>
+  <li>Ajustez les sélecteurs CSS ou patterns regex</li>
+  <li>Stockez les credentials dans des variables d'environnement (jamais en dur)</li>
+  <li>Ajoutez un <code>try/except</code> pour la robustesse en production</li>
+</ol>
+
+<div class="article-cta">
+  <p>Ces scripts sont des points de départ. La vraie puissance vient quand vous les combinez — par exemple, scraper des prix + envoyer une alerte email quand ça passe sous un seuil.</p>
+</div>
+
+</article>
+</main>
+
+<footer>
+  <p>© 2026 LucasMdev · <a href="mailto:lucasmdev@proton.me">Contact</a> · Certains liens sont des liens partenaires.</p>
+</footer>
+
+</body>
+</html>
