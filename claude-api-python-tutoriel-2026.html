@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Créer un chatbot IA avec Claude API en Python — Tutoriel débutant 2026</title>
+  <meta name="description" content="Guide pratique pour créer votre premier chatbot IA avec l'API Claude d'Anthropic en Python. Étapes détaillées, exemples de code, déploiement inclus.">
+  <meta name="author" content="Lucas M.">
+  <meta name="date" content="2026-03-31">
+  <meta name="tags" content="Python,IA,API,Tutoriel">
+  <link rel="canonical" href="https://lucasmdevdev.github.io/claude-api-python-tutoriel-2026.html">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">Lucas<span>M</span>.dev</a>
+    <nav>
+      <a href="/">Blog</a>
+      <a href="mailto:lucasmdev@proton.me">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<article class="article-content">
+
+  <div class="article-header">
+    <div class="article-meta">
+      <span>Python</span>
+      <span>IA</span>
+      <span>Tutoriel</span>
+      31 mars 2026
+    </div>
+    <h1>Créer un chatbot IA avec Claude API en Python — Tutoriel débutant 2026</h1>
+    <p class="article-intro">Vous voulez intégrer une IA dans votre app Python ? L'API Claude d'Anthropic est l'une des plus puissantes et des plus simples à utiliser. Voici comment passer de zéro à un chatbot fonctionnel en 30 minutes.</p>
+  </div>
+
+  <p>Claude est le modèle de langage développé par Anthropic. En 2026, Claude 3.7 et Claude 4 sont parmi les LLM les plus capables pour les tâches complexes (analyse de code, raisonnement, rédaction longue). Et l'API est remarquablement bien conçue pour les développeurs.</p>
+
+  <h2>Prérequis</h2>
+  <ul>
+    <li>Python 3.8+</li>
+    <li>Un compte Anthropic (plan gratuit disponible avec crédits d'essai)</li>
+    <li>Notions de base en Python</li>
+  </ul>
+
+  <h2>Étape 1 — Créer votre compte et obtenir une clé API</h2>
+
+  <ol>
+    <li>Allez sur <strong>console.anthropic.com</strong></li>
+    <li>Créez un compte gratuit</li>
+    <li>Dans "API Keys", cliquez sur "Create Key"</li>
+    <li>Copiez la clé — vous ne pourrez plus la voir après</li>
+  </ol>
+
+  <p>Stockez-la dans une variable d'environnement, jamais en dur dans votre code :</p>
+  <pre><code>export ANTHROPIC_API_KEY="sk-ant-votre-cle-ici"</code></pre>
+
+  <h2>Étape 2 — Installer le SDK Python</h2>
+
+  <pre><code>pip install anthropic</code></pre>
+
+  <h2>Étape 3 — Votre premier appel API</h2>
+
+  <pre><code>import anthropic
+
+client = anthropic.Anthropic()
+
+message = client.messages.create(
+    model="claude-sonnet-4-5",
+    max_tokens=1024,
+    messages=[
+        {"role": "user", "content": "Explique-moi les closures en Python en 3 phrases."}
+    ]
+)
+
+print(message.content[0].text)</code></pre>
+
+  <p>C'est tout. Vraiment. Lancez ce script et vous aurez une réponse de Claude en quelques secondes.</p>
+
+  <h2>Étape 4 — Créer un vrai chatbot avec historique</h2>
+
+  <p>Un chatbot doit se souvenir de la conversation. Voici comment gérer l'historique :</p>
+
+  <pre><code>import anthropic
+
+client = anthropic.Anthropic()
+conversation_history = []
+
+def chat(user_message):
+    # Ajouter le message utilisateur à l'historique
+    conversation_history.append({
+        "role": "user",
+        "content": user_message
+    })
+
+    # Appel API avec tout l'historique
+    response = client.messages.create(
+        model="claude-sonnet-4-5",
+        max_tokens=1024,
+        system="Tu es un assistant utile et concis. Tu réponds en français.",
+        messages=conversation_history
+    )
+
+    # Extraire la réponse
+    assistant_message = response.content[0].text
+
+    # Ajouter la réponse à l'historique
+    conversation_history.append({
+        "role": "assistant",
+        "content": assistant_message
+    })
+
+    return assistant_message
+
+# Interface de chat simple
+print("Chatbot Claude — tapez 'quit' pour quitter")
+while True:
+    user_input = input("\nVous : ")
+    if user_input.lower() == "quit":
+        break
+    response = chat(user_input)
+    print(f"\nClaude : {response}")</code></pre>
+
+  <h2>Étape 5 — Ajouter une personnalité avec le system prompt</h2>
+
+  <p>Le paramètre <code>system</code> est l'outil le plus puissant de l'API. Il définit le comportement et la personnalité du chatbot :</p>
+
+  <pre><code>system_prompt = """
+Tu es Alex, un assistant expert en productivité et en automatisation.
+- Tu réponds toujours en français
+- Tes réponses sont courtes et actionnables (max 3 paragraphes)
+- Tu suggères toujours une action concrète à la fin de chaque réponse
+- Tu es enthousiaste mais pas excessif
+"""
+
+response = client.messages.create(
+    model="claude-sonnet-4-5",
+    max_tokens=1024,
+    system=system_prompt,
+    messages=[{"role": "user", "content": "Comment mieux gérer mon temps ?"}]
+)</code></pre>
+
+  <h2>Étape 6 — Créer une API Flask pour servir le chatbot</h2>
+
+  <pre><code>from flask import Flask, request, jsonify
+import anthropic
+
+app = Flask(__name__)
+client = anthropic.Anthropic()
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    data = request.json
+    messages = data.get('messages', [])
+
+    response = client.messages.create(
+        model="claude-sonnet-4-5",
+        max_tokens=1024,
+        system="Tu es un assistant utile. Réponds en français.",
+        messages=messages
+    )
+
+    return jsonify({
+        "response": response.content[0].text,
+        "usage": {
+            "input_tokens": response.usage.input_tokens,
+            "output_tokens": response.usage.output_tokens
+        }
+    })
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)</code></pre>
+
+  <p>Testez avec curl :</p>
+  <pre><code>curl -X POST http://localhost:5000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"messages": [{"role": "user", "content": "Bonjour !"}]}'</code></pre>
+
+  <h2>Tarification — Ce que ça coûte vraiment</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Modèle</th>
+        <th>Input (par M tokens)</th>
+        <th>Output (par M tokens)</th>
+        <th>Cas d'usage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>claude-haiku-4-5</td>
+        <td>0.25$</td>
+        <td>1.25$</td>
+        <td>Tâches simples, haut volume</td>
+      </tr>
+      <tr>
+        <td>claude-sonnet-4-5</td>
+        <td>3$</td>
+        <td>15$</td>
+        <td>Équilibre qualité/prix</td>
+      </tr>
+      <tr>
+        <td>claude-opus-4-6</td>
+        <td>15$</td>
+        <td>75$</td>
+        <td>Tâches complexes</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Pour un chatbot avec 1000 conversations/jour de ~500 tokens chacune</strong>, comptez environ 2-5$ par mois avec Haiku. Très accessible.</p>
+
+  <h2>Bonnes pratiques</h2>
+
+  <ul>
+    <li><strong>Gérez les erreurs</strong> : wrappez vos appels dans try/except pour gérer les rate limits</li>
+    <li><strong>Limitez l'historique</strong> : gardez les N derniers messages pour éviter des coûts excessifs</li>
+    <li><strong>Loggez les conversations</strong> : indispensable pour débugger et améliorer le système prompt</li>
+    <li><strong>Utilisez le streaming</strong> : pour un affichage en temps réel (UX bien meilleure)</li>
+  </ul>
+
+  <h2>Aller plus loin</h2>
+
+  <ul>
+    <li>Tool use (function calling) : laissez Claude appeler vos propres fonctions Python</li>
+    <li>Vision : envoyez des images à analyser</li>
+    <li>Prompt caching : réduisez les coûts sur les system prompts longs</li>
+  </ul>
+
+  <div class="article-cta">
+    <p>En 30 minutes, vous pouvez avoir un chatbot fonctionnel. C'est vraiment accessible même pour les débutants.</p>
+    <p><em>Note : les prix mentionnés sont indicatifs et peuvent évoluer. Consultez la documentation Anthropic pour les tarifs actuels.</em></p>
+  </div>
+
+</article>
+</main>
+
+<footer>
+  <p>© 2026 LucasMdev · <a href="mailto:lucasmdev@proton.me">Contact</a> · Certains liens sont des liens partenaires.</p>
+</footer>
+
+</body>
+</html>
