@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>LucasMdev — IA, Automatisation &amp; Productivité</title>
+    <link>https://lucasmdevdev.github.io</link>
+    <description>Guides pratiques sur l'IA, l'automatisation no-code et la productivité tech. Testez les meilleurs outils avant de payer.</description>
+    <language>fr</language>
+    <lastBuildDate>Sat, 28 Mar 2026 19:52:37 +0200</lastBuildDate>
+    <atom:link href="https://lucasmdevdev.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <image>
+      <url>https://lucasmdevdev.github.io/favicon.ico</url>
+      <title>LucasMdev</title>
+      <link>https://lucasmdevdev.github.io</link>
+    </image>
+  <item>
+    <title><![CDATA[Comment créer une newsletter rentable en 2026 (guide complet)]]></title>
+    <link>https://lucasmdevdev.github.io/creer-newsletter-rentable-2026.html</link>
+    <guid isPermaLink="true">https://lucasmdevdev.github.io/creer-newsletter-rentable-2026.html</guid>
+    <description><![CDATA[Mon choix en 2026 : Beehiiv. La plateforme a explosé en 2024-2025 et est maintenant la référence pour les créateurs sérieux. Plan gratuit jusqu'à 2500 abonnés, zéro commission, et un réseau de sponsor...]]></description>
+    <pubDate>Mon, 30 Mar 2026 09:00:00 +0200</pubDate>
+    <category>Newsletter</category>
+    <category>Marketing</category>
+  </item>
+  <item>
+    <title><![CDATA[5 meilleures alternatives gratuites à ChatGPT en 2026]]></title>
+    <link>https://lucasmdevdev.github.io/alternative-chatgpt-gratuite-2026.html</link>
+    <guid isPermaLink="true">https://lucasmdevdev.github.io/alternative-chatgpt-gratuite-2026.html</guid>
+    <description><![CDATA[Claude est développé par Anthropic, une startup fondée par d'anciens d'OpenAI. En 2026, Claude 3.5 est largement considéré comme le meilleur modèle pour la rédaction de qualité, l'analyse de documents...]]></description>
+    <pubDate>Sun, 29 Mar 2026 09:00:00 +0200</pubDate>
+    <category>LLM</category>
+    <category>Lire l'article →</category>
+  </item>
+  <item>
+    <title><![CDATA[10 scripts Python qui automatisent votre vie de développeur en 2026]]></title>
+    <link>https://lucasmdevdev.github.io/python-automation-scripts-2026.html</link>
+    <guid isPermaLink="true">https://lucasmdevdev.github.io/python-automation-scripts-2026.html</guid>
+    <description><![CDATA[10 scripts Python prêts à l'emploi pour automatiser les tâches répétitives : renommage de fichiers, envoi d'emails, scraping, monitoring. Copier-coller et adapter.]]></description>
+    <pubDate>Wed, 01 Apr 2026 09:00:00 +0200</pubDate>
+    <category>Python</category>
+    <category>Automatisation</category>
+  </item>
+  <item>
+    <title><![CDATA[Les meilleurs outils gratuits pour indie hackers en 2026]]></title>
+    <link>https://lucasmdevdev.github.io/free-tools-indie-hacker-2026.html</link>
+    <guid isPermaLink="true">https://lucasmdevdev.github.io/free-tools-indie-hacker-2026.html</guid>
+    <description><![CDATA[Stack complet 100% gratuit pour lancer un projet indie : hébergement, base de données, email, analytics, CI/CD. Zéro euro pour commencer.]]></description>
+    <pubDate>Thu, 02 Apr 2026 09:00:00 +0200</pubDate>
+    <category>Outils</category>
+    <category>Indie hacking</category>
+  </item>
+  <item>
+    <title><![CDATA[Replit Agent vs Cursor vs GitHub Copilot en 2026 : lequel choisir ?]]></title>
+    <link>https://lucasmdevdev.github.io/replit-cursor-copilot-2026.html</link>
+    <guid isPermaLink="true">https://lucasmdevdev.github.io/replit-cursor-copilot-2026.html</guid>
+    <description><![CDATA[J'ai utilisé les trois pendant 3 mois sur des projets réels. Voici un verdict honnête, sans bullshit marketing.]]></description>
+    <pubDate>Sun, 29 Mar 2026 09:00:00 +0200</pubDate>
+    <category>Développement</category>
+    <category>Lire l'article →</category>
+  </item>
+  <item>
+    <title><![CDATA[Créer un chatbot IA avec Claude API en Python — Tutoriel débutant 2026]]></title>
+    <link>https://lucasmdevdev.github.io/claude-api-python-tutoriel-2026.html</link>
+    <guid isPermaLink="true">https://lucasmdevdev.github.io/claude-api-python-tutoriel-2026.html</guid>
+    <description><![CDATA[Vous voulez intégrer une IA dans votre app Python ? L'API Claude d'Anthropic est l'une des plus puissantes et des plus simples à utiliser. Voici comment passer de zéro à un chatbot fonctionnel en 30 m...]]></description>
+    <pubDate>Tue, 31 Mar 2026 09:00:00 +0200</pubDate>
+    <category>Python</category>
+    <category>Lire l'article →</category>
+  </item>
+  <item>
+    <title><![CDATA[7 automatisations no-code qui font gagner 5h par semaine en 2026]]></title>
+    <link>https://lucasmdevdev.github.io/automatisations-no-code-gain-temps-2026.html</link>
+    <guid isPermaLink="true">https://lucasmdevdev.github.io/automatisations-no-code-gain-temps-2026.html</guid>
+    <description><![CDATA[J'ai passé 2 semaines à documenter toutes mes tâches répétitives. Voici les 7 automatisations qui m'ont libéré le plus de temps — et comment les reproduire en moins d'une heure.]]></description>
+    <pubDate>Mon, 30 Mar 2026 09:00:00 +0200</pubDate>
+    <category>Automatisation</category>
+    <category>No-code</category>
+  </item>
+  <item>
+    <title><![CDATA[5 outils IA qui vont transformer votre productivité en 2026]]></title>
+    <link>https://lucasmdevdev.github.io/5-outils-ia-productivite-2026.html</link>
+    <guid isPermaLink="true">https://lucasmdevdev.github.io/5-outils-ia-productivite-2026.html</guid>
+    <description><![CDATA[Claude, Cursor, Perplexity, Make, Notion AI — les outils que j'utilise vraiment au quotidien et pourquoi ils changent la donne.]]></description>
+    <pubDate>Sat, 28 Mar 2026 09:00:00 +0200</pubDate>
+    <category>Productivité</category>
+    <category>Lire l'article →</category>
+  </item>
+  <item>
+    <title><![CDATA[Make vs Zapier vs n8n en 2026 : lequel choisir ?]]></title>
+    <link>https://lucasmdevdev.github.io/make-vs-zapier-vs-n8n-2026.html</link>
+    <guid isPermaLink="true">https://lucasmdevdev.github.io/make-vs-zapier-vs-n8n-2026.html</guid>
+    <description><![CDATA[J'ai testé les trois outils en profondeur. Voici un comparatif honnête avec des cas d'usage concrets pour vous aider à choisir.]]></description>
+    <pubDate>Sat, 28 Mar 2026 09:00:00 +0200</pubDate>
+    <category>Automatisation</category>
+    <category>No-code</category>
+  </item>
+  <item>
+    <title><![CDATA[Faire tourner des LLM en local en 2026 : guide complet avec Ollama]]></title>
+    <link>https://lucasmdevdev.github.io/llm-local-ollama-2026.html</link>
+    <guid isPermaLink="true">https://lucasmdevdev.github.io/llm-local-ollama-2026.html</guid>
+    <description><![CDATA[Confidentialité totale, 0€/mois, disponible hors-ligne. Tout ce qu'il faut savoir pour avoir son propre ChatGPT privé.]]></description>
+    <pubDate>Sat, 28 Mar 2026 09:00:00 +0200</pubDate>
+    <category>LLM</category>
+    <category>Open-source</category>
+  </item>
+  <item>
+    <title><![CDATA[Les meilleures extensions VS Code en 2026 : ma sélection]]></title>
+    <link>https://lucasmdevdev.github.io/meilleures-extensions-vscode-2026.html</link>
+    <guid isPermaLink="true">https://lucasmdevdev.github.io/meilleures-extensions-vscode-2026.html</guid>
+    <description><![CDATA[10 extensions testées au quotidien : IA (Codeium, Continue), Git (GitLens), qualité de code (ESLint, Error Lens) et productivité. Que du concret.]]></description>
+    <pubDate>Sat, 28 Mar 2026 09:00:00 +0200</pubDate>
+    <category>VS Code</category>
+    <category>Dev Tools</category>
+  </item>
+  <item>
+    <title><![CDATA[Meilleur VPN en 2026 : comparatif honnête]]></title>
+    <link>https://lucasmdevdev.github.io/meilleur-vpn-2026.html</link>
+    <guid isPermaLink="true">https://lucasmdevdev.github.io/meilleur-vpn-2026.html</guid>
+    <description><![CDATA[NordVPN, Mullvad, ProtonVPN, ExpressVPN — mon verdict après tests approfondis, selon différents profils et budgets.]]></description>
+    <pubDate>Sat, 28 Mar 2026 09:00:00 +0200</pubDate>
+    <category>Sécurité</category>
+    <category>Privacy</category>
+  </item>
+  <item>
+    <title><![CDATA[Créer un blog gratuit avec GitHub Pages en 2026 : guide complet]]></title>
+    <link>https://lucasmdevdev.github.io/github-pages-blog-gratuit-2026.html</link>
+    <guid isPermaLink="true">https://lucasmdevdev.github.io/github-pages-blog-gratuit-2026.html</guid>
+    <description><![CDATA[Hébergement 0€, HTTPS automatique, déploiement en 10 minutes. Tout ce qu'il faut savoir pour mettre son site en ligne sur GitHub Pages.]]></description>
+    <pubDate>Sat, 28 Mar 2026 09:00:00 +0200</pubDate>
+    <category>Tutoriel</category>
+    <category>GitHub</category>
+  </item>
+  <item>
+    <title><![CDATA[Cursor vs GitHub Copilot vs Codeium en 2026 : lequel choisir ?]]></title>
+    <link>https://lucasmdevdev.github.io/cursor-vs-copilot-2026.html</link>
+    <guid isPermaLink="true">https://lucasmdevdev.github.io/cursor-vs-copilot-2026.html</guid>
+    <description><![CDATA[3 mois à tester les trois assistants IA pour le code. Verdict honnête sur les prix, la qualité et les cas d'usage de chacun.]]></description>
+    <pubDate>Sat, 28 Mar 2026 09:00:00 +0200</pubDate>
+    <category>Dev Tools</category>
+    <category>Comparatif</category>
+  </item>
+  <item>
+    <title><![CDATA[Votre première automatisation avec Make en 2026 : guide pas à pas]]></title>
+    <link>https://lucasmdevdev.github.io/premiere-automatisation-make-2026.html</link>
+    <guid isPermaLink="true">https://lucasmdevdev.github.io/premiere-automatisation-make-2026.html</guid>
+    <description><![CDATA[Gmail → Notion en 30 minutes sans code. Le guide parfait pour débuter avec l'automatisation no-code et comprendre la logique de Make.]]></description>
+    <pubDate>Sat, 28 Mar 2026 09:00:00 +0200</pubDate>
+    <category>Tutoriel</category>
+    <category>Make</category>
+  </item>
+  </channel>
+</rss>

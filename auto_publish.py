@@ -248,8 +248,18 @@ def main():
     update_sitemap(filename, date_str)
     log("Sitemap mis à jour")
 
+    # Régénérer le flux RSS
+    try:
+        result = subprocess.run(
+            ["python3", "gen_rss.py"],
+            cwd=BLOG_DIR, capture_output=True, text=True
+        )
+        log(f"RSS: {result.stdout.strip()}")
+    except Exception as e:
+        log(f"AVERTISSEMENT RSS: {e}")
+
     # Git push
-    files_to_add = [filename, "index.html", "sitemap.xml"]
+    files_to_add = [filename, "index.html", "sitemap.xml", "feed.xml"]
     commit_msg = f"Auto-publish: {meta['title'][:60]}"
     if git_push(files_to_add, commit_msg):
         log(f"SUCCÈS: {filename} publié sur GitHub Pages")
