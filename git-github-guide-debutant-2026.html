@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git et GitHub pour Débutants en 2026 : Guide Complet avec Commandes</title>
+<meta name="description" content="Guide complet Git et GitHub pour débutants en 2026. Commandes essentielles, branches, pull requests, workflow professionnel. Avec exemples pratiques.">
+<link rel="canonical" href="https://lucasmdevdev.github.io/git-github-guide-debutant-2026.html">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav><a href="index.html">← Accueil</a></nav>
+
+<article>
+<h1>Git et GitHub pour Débutants en 2026 : Guide Complet</h1>
+<p class="meta">Par Lucas M Dev — 28 mars 2026 — 14 min de lecture</p>
+
+<p>Git est l'outil de contrôle de version que tout développeur doit maîtriser. En 2026, ne pas savoir utiliser Git est un dealbreaker en entreprise. Ce guide vous explique tout de zéro, avec les commandes que vous utiliserez vraiment au quotidien.</p>
+
+<h2>Pourquoi Git est indispensable</h2>
+
+<p>Git permet de :</p>
+<ul>
+<li>Sauvegarder l'historique complet de votre code</li>
+<li>Travailler à plusieurs sans se marcher dessus</li>
+<li>Revenir à une version précédente si quelque chose casse</li>
+<li>Expérimenter dans des branches séparées</li>
+<li>Contribuer à des projets open-source</li>
+</ul>
+
+<h2>Installation et configuration</h2>
+
+<pre><code># Linux
+sudo apt install git
+
+# Mac (via Homebrew)
+brew install git
+
+# Windows
+# Télécharger Git for Windows : git-scm.com
+
+# Configuration initiale (obligatoire)
+git config --global user.name "Votre Nom"
+git config --global user.email "vous@example.com"
+git config --global init.defaultBranch main  # Branche par défaut
+
+# Vérifier la config
+git config --list</code></pre>
+
+<h2>Les concepts fondamentaux</h2>
+
+<h3>Le Repository (Repo)</h3>
+<p>Un repo Git est un dossier suivi par Git. Il contient votre code + un historique de toutes les modifications.</p>
+
+<h3>Les 3 zones de Git</h3>
+<ul>
+<li><strong>Working Directory</strong> : vos fichiers tels qu'ils sont sur le disque</li>
+<li><strong>Staging Area (Index)</strong> : ce que vous avez préparé pour le prochain commit</li>
+<li><strong>Repository</strong> : l'historique des commits sauvegardés</li>
+</ul>
+
+<h2>Les commandes essentielles</h2>
+
+<h3>Initialiser et créer un repo</h3>
+
+<pre><code># Initialiser Git dans un dossier existant
+cd mon-projet
+git init
+
+# Ou cloner un repo existant
+git clone https://github.com/user/repo.git
+git clone https://github.com/user/repo.git mon-dossier-local</code></pre>
+
+<h3>Le cycle basique add → commit → push</h3>
+
+<pre><code># Voir l'état de votre repo
+git status
+
+# Ajouter des fichiers au staging
+git add fichier.txt              # Un fichier
+git add src/                     # Un dossier entier
+git add .                        # Tous les fichiers modifiés
+
+# Créer un commit
+git commit -m "feat: ajouter la page de connexion"
+
+# Voir l'historique
+git log
+git log --oneline               # Format compact
+git log --oneline --graph       # Avec branches visuelles
+
+# Envoyer sur GitHub
+git push origin main</code></pre>
+
+<h3>Messages de commit — Bonne pratique</h3>
+<p>La convention <strong>Conventional Commits</strong> est la plus répandue en 2026 :</p>
+<pre><code>feat: ajouter la fonctionnalité de recherche
+fix: corriger le bug de connexion sur mobile
+docs: mettre à jour le README
+style: formater le code avec Prettier
+refactor: simplifier la logique d'authentification
+test: ajouter les tests unitaires pour userService
+chore: mettre à jour les dépendances</code></pre>
+
+<h2>Travailler avec des branches</h2>
+
+<pre><code># Lister les branches
+git branch
+
+# Créer une branche
+git branch feature/page-contact
+
+# Créer ET basculer dessus
+git checkout -b feature/page-contact
+# Ou en moderne Git :
+git switch -c feature/page-contact
+
+# Basculer entre branches
+git switch main
+git switch feature/page-contact
+
+# Fusionner une branche dans main
+git switch main
+git merge feature/page-contact
+
+# Supprimer une branche
+git branch -d feature/page-contact  # Après merge
+git branch -D feature/page-contact  # Force (sans merge)</code></pre>
+
+<h2>Corriger des erreurs courantes</h2>
+
+<pre><code># Annuler les modifications non commitées
+git restore fichier.txt           # Un fichier
+git restore .                     # Tout
+
+# Retirer un fichier du staging
+git restore --staged fichier.txt
+
+# Annuler le dernier commit (garder les modifs)
+git reset --soft HEAD~1
+
+# Modifier le dernier commit (message ou contenu)
+git commit --amend -m "Nouveau message"
+
+# Voir les différences
+git diff                          # Modifs non stagées
+git diff --staged                 # Modifs stagées</code></pre>
+
+<h2>Travailler avec GitHub</h2>
+
+<h3>Connecter votre repo local à GitHub</h3>
+
+<pre><code># 1. Créer un repo sur github.com
+# 2. Connecter votre repo local
+git remote add origin https://github.com/vous/votre-repo.git
+git branch -M main
+git push -u origin main</code></pre>
+
+<h3>Pull Requests — Le workflow pro</h3>
+
+<pre><code># Workflow standard en équipe
+git switch main
+git pull origin main              # Mettre à jour local
+git switch -c feature/nouvelle-fonctionnalite
+
+# ... travaillez sur votre feature ...
+git add .
+git commit -m "feat: ajouter la fonctionnalité"
+git push origin feature/nouvelle-fonctionnalite
+
+# Ensuite, créez une Pull Request sur GitHub
+# Demandez une review à vos collègues
+# Après approbation : merge dans main</code></pre>
+
+<h3>Récupérer les dernières modifications</h3>
+
+<pre><code># Récupérer et fusionner
+git pull origin main
+
+# Récupérer sans fusionner
+git fetch origin
+
+# Rebase — réappliquer vos commits sur la version la plus récente
+git fetch origin
+git rebase origin/main</code></pre>
+
+<h2>Le .gitignore — Ce qu'on ne commit JAMAIS</h2>
+
+<pre><code># Exemple de .gitignore pour un projet Node.js
+node_modules/
+.env
+.env.local
+.env.production
+dist/
+build/
+*.log
+.DS_Store        # Mac
+Thumbs.db        # Windows
+.vscode/         # Configuration IDE (optionnel)
+coverage/        # Rapports de tests</code></pre>
+
+<h2>Commandes Git que j'utilise quotidiennement</h2>
+
+<pre><code>git status              # Où j'en suis
+git add .               # Tout stager
+git commit -m "..."     # Committer
+git push                # Envoyer sur GitHub
+git pull                # Récupérer les dernières modifs
+git log --oneline       # Historique rapide
+git switch -c branch    # Créer une branche
+git diff                # Voir les changements</code></pre>
+
+<h2>Ressources pour aller plus loin</h2>
+<ul>
+<li><strong>Pro Git</strong> (gratuit en ligne) : la référence absolue sur Git</li>
+<li><strong>Oh My Git!</strong> : jeu interactif pour apprendre Git</li>
+<li><strong>Learn Git Branching</strong> : visualisation interactive des branches</li>
+<li><strong>GitHub Skills</strong> : cours officiels GitHub gratuits</li>
+</ul>
+
+<hr>
+<p><a href="deployer-app-gratuitement-2026.html">→ Déployer votre app avec Railway, Render, Fly.io</a></p>
+<p><a href="github-pages-blog-gratuit-2026.html">→ Créer un blog gratuit avec GitHub Pages</a></p>
+</article>
+<footer><p>© 2026 LucasMDev — <a href="index.html">Accueil</a> | <a href="ressources.html">Ressources</a></p></footer>
+</body>
+</html>
