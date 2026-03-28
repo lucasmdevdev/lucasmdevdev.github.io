@@ -50,7 +50,13 @@ class ArticleMetaParser(HTMLParser):
 
     def handle_data(self, data):
         if self._in_title:
-            self.meta["title"] = data.strip()
+            title = data.strip()
+            # Supprimer le suffixe " — LucasMdev" si présent
+            for suffix in [" — LucasMdev", " - LucasMdev"]:
+                if title.endswith(suffix):
+                    title = title[:-len(suffix)]
+                    break
+            self.meta["title"] = title
             self._in_title = False
 
     def handle_endtag(self, tag):
