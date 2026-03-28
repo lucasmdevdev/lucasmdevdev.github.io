@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Complete Developer Toolkit 2026 — Lucas M</title>
+<style>
+  :root{--bg:#0f1117;--surface:#1a1d2e;--border:#2e3150;--accent:#6366f1;--text:#e2e8f0;--text-dim:#94a3b8;--success:#10b981}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+  .wrapper{max-width:800px;margin:0 auto;padding:40px 24px}
+  h1{font-size:2.5rem;font-weight:800;background:linear-gradient(135deg,#e2e8f0,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+  h2{font-size:1.8rem;font-weight:700;margin:40px 0 16px;color:var(--accent);border-bottom:1px solid var(--border);padding-bottom:8px}
+  h3{font-size:1.2rem;font-weight:600;margin:24px 0 12px;color:#e2e8f0}
+  p{margin-bottom:16px;color:var(--text)}
+  code{background:#252836;padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#a78bfa}
+  pre{background:#252836;border:1px solid var(--border);border-radius:8px;padding:16px;overflow-x:auto;margin:16px 0}
+  pre code{background:none;padding:0;color:#e2e8f0;font-size:13px}
+  table{width:100%;border-collapse:collapse;margin:16px 0}
+  th{background:#252836;padding:10px 14px;text-align:left;font-size:13px;color:var(--text-dim);border:1px solid var(--border)}
+  td{padding:10px 14px;border:1px solid var(--border);font-size:14px}
+  tr:nth-child(even) td{background:#1a1d2e}
+  ul,ol{margin:12px 0 12px 24px}
+  li{margin:4px 0}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .hero{text-align:center;padding:60px 0 40px;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .subtitle{color:var(--text-dim);font-size:1.1rem;margin-top:8px}
+  blockquote{border-left:3px solid var(--accent);padding:12px 20px;background:#1a1d2e;margin:16px 0;border-radius:0 8px 8px 0}
+  hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+  .footer{text-align:center;padding:40px 0;color:var(--text-dim);font-size:14px;border-top:1px solid var(--border);margin-top:40px}
+  @media print{body{background:white;color:#333}pre{background:#f5f5f5;border:1px solid #ddd}code{background:#f0f0f0;color:#6366f1}h2{color:#6366f1}}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<div class="hero"><h1>The Complete Developer Toolkit 2026
+### 200+ Resources, Tools & Shortcuts Every Developer Should Know
+
+*By Lucas M — lucasmdevdev.github.io*
+
+---
+
+## Introduction
+
+This guide is the result of years of developer experience distilled into one place. Inside you'll find:
+
+- **31 free browser tools** you can use right now (no signup)
+- **50+ curated free resources** for learning and productivity
+- **CSS patterns** you'll actually use
+- **Git workflows** that save hours per week
+- **Linux/terminal shortcuts** that feel like superpowers
+- **API testing toolkit** without spending a cent
+- **Performance optimization checklist** for web apps
+
+Everything here is battle-tested. No bloat, no filler — just tools and techniques that work.
+
+---
+
+## Part 1: Free Browser Tools (31 Tools at DevToolkit)
+
+All available at **lucasmdevdev.github.io/devtoolkit** — no signup, no ads, runs locally.
+
+### JSON & Data
+| Tool | What it does |
+|------|-------------|
+| JSON Formatter | Beautify, validate, detect errors |
+| JSON → TypeScript | Auto-generate interfaces |
+| CSV ↔ JSON | Convert between formats |
+| SQL Formatter | Format and minify queries |
+
+### Encoders & Security
+| Tool | What it does |
+|------|-------------|
+| Base64 Encoder/Decoder | Encode text and files |
+| JWT Decoder | Inspect tokens locally (safe!) |
+| Hash Generator | MD5, SHA-1, SHA-256, SHA-512 |
+| HTML Encoder | Prevent XSS, escape entities |
+| Image to Base64 | Embed images in HTML/CSS |
+
+### CSS & Design
+| Tool | What it does |
+|------|-------------|
+| CSS Formatter & Minifier | Beautify or compress CSS |
+| Box Shadow Generator | Visual shadow builder |
+| PX ↔ REM Converter | Essential for responsive design |
+| Color Converter | HEX, RGB, HSL, HSB |
+| Color Picker | Shades, contrast checking |
+
+### Generators
+| Tool | What it does |
+|------|-------------|
+| UUID / ULID Generator | Generate IDs in bulk |
+| Password Generator | Secure, with entropy meter |
+| QR Code Generator | URLs, WiFi, vCards |
+| Lorem Ipsum Generator | Paragraphs, sentences, words |
+| Cron Expression Helper | Understand and create cron |
+| .gitignore Generator | For 30+ tech stacks |
+| GitHub README Generator | Professional READMEs |
+| Meta Tag Generator | SEO, Open Graph, Twitter |
+
+### Converters
+| Tool | What it does |
+|------|-------------|
+| Timestamp Converter | Unix ↔ human readable |
+| URL Encoder/Decoder | Query strings and params |
+| Number Base Converter | Decimal, hex, binary, octal |
+| Text Case Converter | camelCase, snake_case, etc. |
+
+### Testing & Analysis
+| Tool | What it does |
+|------|-------------|
+| Regex Tester | With match highlighting |
+| Diff Viewer | Side-by-side comparison |
+| Markdown Preview | Real-time rendering |
+| Word Counter | + reading time, frequency |
+| HTTP Status Codes | Complete reference |
+
+---
+
+## Part 2: Git Mastery (Commands You Actually Need)
+
+### Daily Workflow
+```bash
+# Start a new feature
+git checkout -b feat/user-authentication
+
+# Stage specific changes (not everything)
+git add -p  # interactive staging
+
+# Commit with context
+git commit -m "feat(auth): add JWT token validation"
+
+# Push and create PR in one shot
+git push -u origin HEAD
+```
+
+### Fix Common Mistakes
+```bash
+# Undo last commit (keep changes)
+git reset --soft HEAD~1
+
+# Undo a specific file change
+git checkout HEAD -- src/file.js
+
+# Fix commit message
+git commit --amend -m "Better message"
+
+# Stash everything including untracked
+git stash push -u -m "WIP: auth feature"
+
+# Find the commit that broke something
+git bisect start
+git bisect bad HEAD
+git bisect good v2.1.0
+```
+
+### Power Commands
+```bash
+# Search commit history
+git log --all --grep="bug fix"
+
+# Show changes in a specific file over time
+git log -p -- src/auth.js
+
+# Create an alias
+git config --global alias.lg "log --oneline --graph --decorate"
+
+# Clean up merged branches
+git branch --merged | grep -v main | xargs git branch -d
+
+# Rebase interactively (last 5 commits)
+git rebase -i HEAD~5
+```
+
+---
+
+## Part 3: CSS Patterns Worth Bookmarking
+
+### Perfect Centering (Finally)
+```css
+/* Method 1: CSS Grid */
+.center {
+  display: grid;
+  place-items: center;
+}
+
+/* Method 2: Flexbox */
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Method 3: Absolute + Transform (no parent needed) */
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+```
+
+### Responsive Typography
+```css
+:root {
+  /* Scales from 16px at 320px to 20px at 1200px */
+  font-size: clamp(1rem, 0.875rem + 0.625vw, 1.25rem);
+}
+
+h1 { font-size: clamp(2rem, 4vw + 1rem, 4rem); }
+h2 { font-size: clamp(1.5rem, 3vw + 0.5rem, 3rem); }
+```
+
+### Modern Card Component
+```css
+.card {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+```
+
+### Custom Scrollbar
+```css
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(128,128,128,0.4);
+  border-radius: 3px;
+}
+```
+
+### The "Lobotomized Owl" Spacing
+```css
+/* Add margin-top to every element that follows another element */
+.flow > * + * {
+  margin-top: var(--flow-space, 1em);
+}
+```
+
+---
+
+## Part 4: Terminal Shortcuts That Save Hours
+
+### Navigation
+```bash
+# Jump to home
+cd ~
+# Jump back
+cd -
+# Go up
+cd ..
+
+# Ctrl+A = beginning of line
+# Ctrl+E = end of line
+# Ctrl+U = delete to beginning
+# Ctrl+K = delete to end
+# Ctrl+W = delete word backward
+# Ctrl+R = reverse search history
+# !! = repeat last command
+# !$ = last argument of previous command
+```
+
+### File Operations
+```bash
+# Find large files
+find . -type f -size +10M | sort
+
+# Find files modified in last 24h
+find . -type f -mtime -1
+
+# Quick backup
+cp important-file{,.bak}
+
+# Create nested directories
+mkdir -p projects/{frontend,backend}/{src,tests}
+
+# Watch a file for changes
+tail -f /var/log/app.log
+
+# Monitor command output
+watch -n 2 'ps aux | grep node'
+```
+
+### Network
+```bash
+# Check which process uses a port
+lsof -i :3000
+# or
+ss -tlnp | grep 3000
+
+# Quick HTTP server
+python3 -m http.server 8080
+# or
+npx serve .
+
+# Test an endpoint
+curl -s -o /dev/null -w "%{http_code}" https://api.example.com/health
+
+# Download and extract in one step
+curl -sL https://example.com/archive.tar.gz | tar -xz
+```
+
+---
+
+## Part 5: JavaScript Patterns for 2026
+
+### Async/Await Best Practices
+```javascript
+// BAD: Sequential when parallel is possible
+const user = await fetchUser(id);
+const posts = await fetchPosts(id);
+
+// GOOD: Parallel
+const [user, posts] = await Promise.all([
+  fetchUser(id),
+  fetchPosts(id)
+]);
+
+// Handle partial failures
+const results = await Promise.allSettled([
+  fetchUser(id),
+  fetchPosts(id),
+  fetchComments(id)
+]);
+results.forEach(r => {
+  if (r.status === 'fulfilled') console.log(r.value);
+  else console.error('Failed:', r.reason);
+});
+```
+
+### Modern Array Methods
+```javascript
+// Group by (new in 2023)
+const byCategory = products.group(p => p.category);
+
+// Find last
+const lastError = logs.findLast(l => l.level === 'error');
+
+// Flat map
+const allTags = posts.flatMap(post => post.tags);
+
+// Efficient dedup
+const unique = [...new Set(array)];
+const uniqueObjects = [...new Map(arr.map(x => [x.id, x])).values()];
+```
+
+### Useful One-Liners
+```javascript
+// Deep clone (modern way)
+const clone = structuredClone(object);
+
+// Random integer between min and max
+const rand = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+
+// Debounce
+const debounce = (fn, delay) => {
+  let timer;
+  return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), delay); };
+};
+
+// Format numbers
+const fmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+fmt.format(1234567.89); // "$1,234,567.89"
+
+// Relative time
+const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+rtf.format(-2, 'day'); // "2 days ago"
+```
+
+---
+
+## Part 6: Free Learning Resources Worth Bookmarking
+
+### Interactive Learning
+- **javascript.info** — Best modern JavaScript tutorial, free
+- **The Odin Project** — Full-stack curriculum, completely free
+- **freeCodeCamp.org** — Certifications, projects, community
+- **exercism.io** — Coding exercises with mentors, free
+- **roadmap.sh** — Visual roadmaps for every tech path
+
+### References
+- **MDN Web Docs** — The web platform bible
+- **DevDocs.io** — All API docs in one searchable interface
+- **CSS Tricks** — CSS patterns, tricks, almanac
+- **Can I Use** — Browser compatibility at a glance
+- **Bundlephobia** — Check npm package costs
+
+### Tools & Playgrounds
+- **CodePen** — Frontend playground and community
+- **StackBlitz** — Full stack development in browser
+- **ray.so** — Beautiful code screenshots
+- **carbon.now.sh** — Code to image with 30+ themes
+- **transform.tools** — Convert between formats (CSS, JSON, SVG...)
+
+### AI-Powered
+- **GitHub Copilot** — $10/month but worth it for heavy coders
+- **Codeium** — Free Copilot alternative, surprising quality
+- **Tabnine** — Code completion with local model option
+
+---
+
+## Part 7: Performance Checklist
+
+### Before Deploying
+- [ ] Minify CSS, JS, HTML
+- [ ] Compress images (WebP/AVIF)
+- [ ] Enable Gzip/Brotli compression
+- [ ] Set cache headers (1 year for hashed assets)
+- [ ] Remove unused CSS (PurgeCSS)
+- [ ] Code-split large bundles
+- [ ] Lazy-load below-fold images
+- [ ] Use CDN for static assets
+- [ ] Preload critical fonts
+- [ ] Add `loading="lazy"` to images
+
+### Core Web Vitals Targets
+| Metric | Good | Needs Improvement | Poor |
+|--------|------|-------------------|------|
+| LCP | < 2.5s | 2.5s - 4s | > 4s |
+| INP | < 200ms | 200ms - 500ms | > 500ms |
+| CLS | < 0.1 | 0.1 - 0.25 | > 0.25 |
+
+### Database Queries
+```sql
+-- Always use indexes for WHERE columns
+CREATE INDEX idx_users_email ON users(email);
+
+-- Avoid SELECT * — specify columns
+SELECT id, name, email FROM users WHERE active = 1;
+
+-- Use EXPLAIN to understand query plans
+EXPLAIN SELECT * FROM orders WHERE user_id = 123;
+
+-- Pagination with OFFSET is slow at scale, use cursor-based
+-- Instead of: SELECT * FROM posts ORDER BY id LIMIT 20 OFFSET 10000
+-- Use: SELECT * FROM posts WHERE id > ? ORDER BY id LIMIT 20
+```
+
+---
+
+## Part 8: The Developer's Security Checklist
+
+### Never Do These
+- Never store passwords in plain text (use bcrypt, Argon2)
+- Never trust user input without validation
+- Never put secrets in code or git history
+- Never use MD5/SHA1 for passwords
+- Never allow unlimited file upload sizes
+- Never expose stack traces in production
+
+### Always Do These
+- Use HTTPS everywhere
+- Set security headers (CSP, HSTS, X-Frame-Options)
+- Validate and sanitize all inputs
+- Use parameterized queries (no string concatenation)
+- Rate limit authentication endpoints
+- Log security events
+- Keep dependencies updated
+
+### Quick Security Headers
+```javascript
+// Express.js
+app.use(require('helmet')());
+
+// Nginx
+add_header X-Frame-Options DENY;
+add_header X-Content-Type-Options nosniff;
+add_header Referrer-Policy no-referrer-when-downgrade;
+add_header Content-Security-Policy "default-src 'self'";
+```
+
+---
+
+## Conclusion
+
+This is Version 1.0 of The Complete Developer Toolkit. I'll be updating this as new tools, techniques, and resources emerge.
+
+**Find me online:**
+- 🌐 Blog: [lucasmdevdev.github.io](https://lucasmdevdev.github.io)
+- ⚡ Tools: [lucasmdevdev.github.io/devtoolkit](https://lucasmdevdev.github.io/devtoolkit)
+- 👨‍💻 Dev.to: [dev.to/lucasmdevdev](https://dev.to/lucasmdevdev)
+
+---
+
+*Thanks for reading. If this guide saved you time or money, consider sharing it with a developer friend.*
+</h1>
+<div class="footer">
+  <p>The Complete Developer Toolkit 2026 — Lucas M</p>
+  <p><a href="https://lucasmdevdev.github.io">lucasmdevdev.github.io</a> · <a href="https://lucasmdevdev.github.io/devtoolkit">devtoolkit</a> · <a href="https://dev.to/lucasmdevdev">dev.to/lucasmdevdev</a></p>
+</div>
+</div>
+</body>
+</html>
