@@ -1,3 +1,4 @@
 ko_fi: lucasmdev
-buy_me_a_coffee: lucasmdev
-custom: ["https://lucasmdevdev.github.io/dev-starter-kit.html"]
+custom: 
+  - 'https://liberapay.com/lucasmdev'
+  - 'https://www.paypal.me/lucasmdev'
