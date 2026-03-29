@@ -421,5 +421,106 @@
 })();
 </script>
 
+<!-- Email Signup Popup -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(showEmailPopup, 30000);
+    document.addEventListener('mouseout', function(e) {
+        if (e.clientY < 10) showEmailPopup();
+    });
+});
+
+function showEmailPopup() {
+    if (document.getElementById('email-popup-container')) return;
+
+    const container = document.createElement('div');
+    container.id = 'email-popup-container';
+    container.innerHTML = `
+        <div style="
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+            max-width: 350px;
+            z-index: 10000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        ">
+            <h3 style="color: #667eea; margin: 0 0 10px 0; font-size: 18px;">📧 Weekly Dev Tips</h3>
+            <p style="color: #666; font-size: 14px; margin: 0 0 15px 0; line-height: 1.4;">
+                Free tutorials, career insights & income ideas. Join 200+ devs.
+            </p>
+
+            <form onsubmit="handleEmailSignup(event)" style="
+                display: flex;
+                gap: 8px;
+                margin-bottom: 10px;
+            ">
+                <input type="email" placeholder="your@email.com" required style="
+                    flex: 1;
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 5px;
+                    font-size: 14px;
+                ">
+                <button type="submit" style="
+                    padding: 10px 16px;
+                    background: #667eea;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-weight: bold;
+                    font-size: 14px;
+                ">Go</button>
+            </form>
+
+            <p style="color: #999; font-size: 12px; margin: 0;">No spam, unsubscribe anytime</p>
+
+            <button onclick="closeEmailPopup()" style="
+                position: absolute;
+                top: 12px;
+                right: 12px;
+                background: none;
+                border: none;
+                font-size: 20px;
+                cursor: pointer;
+                color: #ccc;
+            ">✕</button>
+        </div>
+    `;
+
+    document.body.appendChild(container);
+}
+
+function handleEmailSignup(e) {
+    e.preventDefault();
+    const email = e.target[0].value;
+
+    // Store in localStorage for now
+    let emails = JSON.parse(localStorage.getItem('emails') || '[]');
+    emails.push({email, date: new Date().toISOString()});
+    localStorage.setItem('emails', JSON.stringify(emails));
+
+    // Show confirmation
+    alert('✅ Welcome! Check your email soon.');
+    closeEmailPopup();
+
+    // Log to server (would need backend)
+    fetch('/api/email-signup', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({email})
+    }).catch(() => {});
+}
+
+function closeEmailPopup() {
+    const container = document.getElementById('email-popup-container');
+    if (container) container.remove();
+}
+</script>
+
 </body>
 </html>
