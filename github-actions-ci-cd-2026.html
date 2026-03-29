@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Actions CI/CD: From Zero to Auto-Deploy (2026)</title>
+  <meta name="description" content="Complete GitHub Actions CI/CD guide. Set up your first workflow, run tests, build Docker images, deploy automatically, manage secrets, and use matrix builds. Real examples included.">
+  <meta name="author" content="Lucas M.">
+  <meta name="date" content="2026-03-29">
+  <meta name="tags" content="GitHub,CI/CD">
+  <meta property="og:title" content="GitHub Actions CI/CD: From Zero to Auto-Deploy (2026)">
+  <meta property="og:description" content="Complete GitHub Actions guide: first workflow, testing, building, deploying, secrets, matrix builds. Real examples.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://lucasmdevdev.github.io/github-actions-ci-cd-2026.html">
+  <link rel="canonical" href="https://lucasmdevdev.github.io/github-actions-ci-cd-2026.html">
+  <link rel="stylesheet" href="style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "GitHub Actions CI/CD: From Zero to Auto-Deploy (2026)",
+  "description": "Complete GitHub Actions CI/CD guide. Set up your first workflow, run tests, build Docker images, deploy automatically, manage secrets, and use matrix builds.",
+  "author": {
+    "@type": "Person",
+    "name": "Lucas M."
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "LucasMdev",
+    "url": "https://lucasmdevdev.github.io"
+  },
+  "url": "https://lucasmdevdev.github.io/github-actions-ci-cd-2026.html",
+  "datePublished": "2026-03-29",
+  "dateModified": "2026-03-29",
+  "inLanguage": "en",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://lucasmdevdev.github.io/github-actions-ci-cd-2026.html"
+  },
+  "keywords": "GitHub Actions, CI/CD, DevOps, automation, deployment"
+}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">Lucas<span>M</span>.dev</a>
+    <nav>
+      <a href="/">Blog</a>
+      <a href="/ressources.html">Ressources</a>
+      <a href="mailto:lucasmdev@proton.me">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<article class="article-content">
+
+  <a href="/" class="back-link">&larr; Back to all articles</a>
+
+  <div class="article-header">
+    <div class="article-meta">
+      <span>GitHub</span>
+      <span>CI/CD</span>
+      March 29, 2026
+    </div>
+    <h1>GitHub Actions CI/CD: From Zero to Auto-Deploy (2026)</h1>
+    <p class="article-intro">GitHub Actions is the most accessible CI/CD platform in 2026. Free for public repos, deeply integrated with GitHub, and powerful enough for any project. This guide takes you from zero to a fully automated test-build-deploy pipeline.</p>
+  </div>
+
+  <p>If you are still deploying by SSHing into a server and running <code>git pull</code>, this guide is for you. By the end, every push to your main branch will automatically run tests, build a Docker image, and deploy to production. No manual steps, no forgotten migrations, no "it works on my machine."</p>
+
+  <h2>1. Your First Workflow</h2>
+
+  <p>GitHub Actions workflows live in <code>.github/workflows/</code> as YAML files. Let us start with the simplest possible workflow:</p>
+
+<pre><code># .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test</code></pre>
+
+  <p>That is it. Push this file to your repository and GitHub will run your tests on every push to <code>main</code> and on every pull request. Let us understand each section:</p>
+
+  <ul>
+    <li><code>on</code> — defines when the workflow runs (triggers)</li>
+    <li><code>jobs</code> — a workflow contains one or more jobs that run in parallel by default</li>
+    <li><code>runs-on</code> — the virtual machine image to use</li>
+    <li><code>steps</code> — sequential tasks within a job</li>
+    <li><code>uses</code> — references a reusable action from the GitHub marketplace</li>
+    <li><code>run</code> — executes a shell command</li>
+  </ul>
+
+  <h2>2. Running Tests with Services</h2>
+
+  <p>Most real applications need a database to run tests. GitHub Actions supports service containers:</p>
+
+<pre><code>name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: &gt;-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: &gt;-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Run database migrations
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/testdb
+
+      - name: Run tests
+        run: npm test
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/testdb
+          REDIS_URL: redis://localhost:6379
+          NODE_ENV: test
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/</code></pre>
+
+  <p>The service containers start before your steps run and are automatically cleaned up afterward. Health checks ensure they are ready before your tests execute.</p>
+
+  <h2>3. Linting and Code Quality</h2>
+
+  <p>Add a separate job for linting. Since jobs run in parallel by default, this does not slow down your test suite:</p>
+
+<pre><code>jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run type-check
+
+  test:
+    runs-on: ubuntu-latest
+    # ... (test job from above)</code></pre>
+
+  <p>Both <code>lint</code> and <code>test</code> run simultaneously. The workflow only passes if both succeed. This keeps your feedback loop fast.</p>
+
+  <h2>4. Building and Pushing Docker Images</h2>
+
+  <p>Once tests pass, build a Docker image and push it to a container registry:</p>
+
+<pre><code>  build:
+    needs: [lint, test]  # Only run after lint and test pass
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'  # Only on main branch
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=sha
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max</code></pre>
+
+  <p>Key details:</p>
+  <ul>
+    <li><code>needs: [lint, test]</code> — this job waits for both lint and test to pass</li>
+    <li><code>cache-from/cache-to: type=gha</code> — uses GitHub's built-in cache for Docker layers, dramatically speeding up subsequent builds</li>
+    <li>The <code>metadata-action</code> automatically generates useful tags based on the git ref</li>
+    <li><code>secrets.GITHUB_TOKEN</code> is automatically available, no manual setup needed for GHCR</li>
+  </ul>
+
+  <h2>5. Secrets and Environment Variables</h2>
+
+  <p>Never hardcode secrets in workflow files. GitHub provides encrypted secrets at the repository and organization level.</p>
+
+  <h3>Setting Up Secrets</h3>
+
+  <p>Go to your repository Settings, then Secrets and variables, then Actions. Add your secrets there. Common ones include:</p>
+
+  <ul>
+    <li><code>DEPLOY_SSH_KEY</code> — private SSH key for deployment</li>
+    <li><code>DEPLOY_HOST</code> — server IP or hostname</li>
+    <li><code>DOCKER_REGISTRY_TOKEN</code> — for private registries</li>
+    <li><code>SLACK_WEBHOOK</code> — for deployment notifications</li>
+  </ul>
+
+  <h3>Using Secrets in Workflows</h3>
+
+<pre><code>    steps:
+      - name: Deploy to production
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          echo "$SSH_KEY" &gt; deploy_key
+          chmod 600 deploy_key
+          ssh -i deploy_key -o StrictHostKeyChecking=no \
+            deploy@$DEPLOY_HOST \
+            "cd /opt/app &amp;&amp; docker compose pull &amp;&amp; docker compose up -d"</code></pre>
+
+  <h3>Environments for Staged Deployments</h3>
+
+  <p>GitHub Environments let you define different secrets and protection rules for staging vs production:</p>
+
+<pre><code>  deploy-staging:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: staging  # Uses staging secrets
+    steps:
+      - name: Deploy to staging
+        run: ./deploy.sh staging
+
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://yourapp.com
+    steps:
+      - name: Deploy to production
+        run: ./deploy.sh production</code></pre>
+
+  <p>You can require manual approval before production deploys. Go to Settings, Environments, production, and add required reviewers. The workflow will pause and wait for approval before proceeding.</p>
+
+  <h2>6. Matrix Builds: Testing Across Versions</h2>
+
+  <p>Matrix builds let you test against multiple versions of Node.js, Python, operating systems, or any other variable:</p>
+
+<pre><code>  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node-version: [18, 20, 22]
+      fail-fast: false  # Don't cancel other jobs if one fails
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test</code></pre>
+
+  <p>This creates 9 jobs (3 OS x 3 Node versions) that run in parallel. <code>fail-fast: false</code> ensures all combinations are tested even if one fails — useful for identifying platform-specific issues.</p>
+
+  <h3>Excluding and Including Specific Combinations</h3>
+
+<pre><code>    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node-version: [18, 20, 22]
+        exclude:
+          - os: windows-latest
+            node-version: 18  # Skip Node 18 on Windows
+        include:
+          - os: ubuntu-latest
+            node-version: 22
+            experimental: true  # Add a flag for special handling</code></pre>
+
+  <h2>7. Caching for Faster Builds</h2>
+
+  <p>Caching dependencies is one of the most impactful optimizations. The <code>actions/setup-node</code> action handles npm caching automatically with the <code>cache: 'npm'</code> option. For other tools:</p>
+
+<pre><code>      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+        if: steps.cache.outputs.cache-hit != 'true'</code></pre>
+
+  <p>The <code>key</code> includes a hash of the lock file, so the cache is invalidated when dependencies change. This can save 2-5 minutes per workflow run.</p>
+
+  <h2>8. Complete CI/CD Pipeline</h2>
+
+  <p>Here is a complete, production-ready pipeline combining everything we have covered:</p>
+
+<pre><code># .github/workflows/ci-cd.yml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run type-check
+
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: testdb
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
+      - run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/testdb
+      - run: npm test -- --coverage
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/testdb
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage
+          path: coverage/
+
+  build:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' &amp;&amp; github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image-tag: ${{ steps.meta.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=sha
+            type=raw,value=latest
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://yourapp.com
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: deploy
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            cd /opt/app
+            docker compose pull
+            docker compose up -d --remove-orphans
+            docker image prune -f
+            echo "Deployed at $(date)"
+
+      - name: Verify deployment
+        run: |
+          sleep 10
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://yourapp.com/health)
+          if [ "$STATUS" != "200" ]; then
+            echo "Health check failed with status $STATUS"
+            exit 1
+          fi
+          echo "Deployment verified successfully"
+
+      - name: Notify on Slack
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}</code></pre>
+
+  <p>Key features of this pipeline:</p>
+  <ul>
+    <li><code>concurrency</code> — cancels in-progress runs when a new push arrives, saving runner minutes</li>
+    <li>Lint and test run in parallel for speed</li>
+    <li>Build only runs on pushes to main (not on PRs)</li>
+    <li>Deploy requires manual approval via the production environment</li>
+    <li>Health check verifies the deployment actually works</li>
+    <li>Slack notification on success or failure</li>
+  </ul>
+
+  <h2>9. Reusable Workflows</h2>
+
+  <p>If you have multiple repositories with similar pipelines, extract common workflows:</p>
+
+<pre><code># .github/workflows/reusable-test.yml
+name: Reusable Test Workflow
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        required: false
+        type: string
+        default: '20'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test</code></pre>
+
+<pre><code># .github/workflows/ci.yml — In any repository
+name: CI
+on: [push, pull_request]
+
+jobs:
+  test:
+    uses: yourorg/.github/.github/workflows/reusable-test.yml@main
+    with:
+      node-version: '20'</code></pre>
+
+  <p>This keeps your CI/CD DRY across dozens of repositories.</p>
+
+  <h2>10. Useful Workflow Recipes</h2>
+
+  <h3>Auto-Label Pull Requests</h3>
+
+<pre><code>name: Label PRs
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}</code></pre>
+
+  <h3>Scheduled Security Audits</h3>
+
+<pre><code>name: Security Audit
+on:
+  schedule:
+    - cron: '0 8 * * 1'  # Every Monday at 8 AM
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm audit --audit-level=high
+      - run: npx snyk test
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}</code></pre>
+
+  <h3>Auto-Merge Dependabot PRs</h3>
+
+<pre><code>name: Auto-Merge Dependabot
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dependabot/fetch-metadata@v2
+        id: metadata
+      - if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}</code></pre>
+
+  <h2>GitHub Actions Pricing in 2026</h2>
+
+  <p>For public repositories, GitHub Actions is completely free with generous limits. For private repositories:</p>
+
+  <table>
+    <tr>
+      <th>Plan</th>
+      <th>Included Minutes/Month</th>
+      <th>Storage</th>
+    </tr>
+    <tr>
+      <td>Free</td>
+      <td>2,000</td>
+      <td>500 MB</td>
+    </tr>
+    <tr>
+      <td>Team</td>
+      <td>3,000</td>
+      <td>2 GB</td>
+    </tr>
+    <tr>
+      <td>Enterprise</td>
+      <td>50,000</td>
+      <td>50 GB</td>
+    </tr>
+  </table>
+
+  <p>Minutes are counted on Linux runners. macOS runners cost 10x and Windows runners cost 2x. For most projects, the free tier is more than enough.</p>
+
+  <div class="article-cta">
+    <p>Want production-ready CI/CD templates you can drop into any project? The <a href="dev-starter-kit.html">Developer Starter Kit 2026</a> includes GitHub Actions workflows for Node.js, Python, and Docker projects, along with Docker Compose files, deployment scripts, and more. <a href="dev-starter-kit.html">Get it for 9 euros</a>.</p>
+  </div>
+
+  <h2>Summary</h2>
+
+  <p>Here is the progression for any project:</p>
+
+  <ol>
+    <li><strong>Week 1</strong> — Add a basic CI workflow that runs tests on every push</li>
+    <li><strong>Week 2</strong> — Add linting and type checking as a parallel job</li>
+    <li><strong>Week 3</strong> — Add Docker image building with GHCR</li>
+    <li><strong>Week 4</strong> — Add automated deployment with environment protection</li>
+    <li><strong>Ongoing</strong> — Add matrix builds, security audits, Dependabot auto-merge</li>
+  </ol>
+
+  <p>Start simple. A 10-line workflow that runs your tests is infinitely better than no CI at all. You can always add complexity later.</p>
+
+  <div class="related-articles">
+    <h3>Related Articles</h3>
+    <ul>
+      <li><a href="docker-compose-production-2026.html">Docker Compose for Production: The Complete Guide (2026)</a></li>
+      <li><a href="api-rate-limiting-nodejs-2026.html">How to Implement API Rate Limiting in Node.js (2026)</a></li>
+      <li><a href="git-github-guide-debutant-2026.html">Git and GitHub for Beginners: Complete Guide</a></li>
+      <li><a href="deployer-app-gratuitement-2026.html">Deploy an App for Free in 2026: Railway, Render, Fly.io</a></li>
+      <li><a href="dev-starter-kit.html">Developer Starter Kit 2026 — 15+ Production-Ready Files</a></li>
+    </ul>
+  </div>
+
+
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 8px; margin: 30px 0; color: white; text-align: center;">
+  <p style="margin: 0 0 15px; font-weight: 600;">Cet article vous a été utile ?</p>
+  <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+    <a href="https://liberapay.com/lucasmdev/" target="_blank" rel="noopener" style="background: #fff; color: #667eea; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">💙 Liberapay</a>
+    <a href="https://www.paypal.me/lucasmdev" target="_blank" rel="noopener" style="background: #fff; color: #667eea; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">💵 PayPal</a>
+    <a href="https://ko-fi.com/lucasmdev" target="_blank" rel="noopener" style="background: #fff; color: #667eea; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">☕ Ko-fi</a>
+  </div>
+</div>
+</article>
+</main>
+
+<div class="support-section">
+  <h3>Found this helpful?</h3>
+  <p>If my articles save you time, consider supporting the blog. Every contribution counts!</p>
+  <div class="support-buttons">
+    <a href="https://buymeacoffee.com/lucasmdev" target="_blank" rel="noopener" class="support-btn support-btn--bmc">
+      <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt=""> Buy me a coffee
+    </a>
+    <a href="https://ko-fi.com/lucasmdev" target="_blank" rel="noopener" class="support-btn support-btn--kofi">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"/></svg>
+      Support on Ko-fi
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2026 LucasMdev &middot; <a href="/ressources.html">Resources</a>
+      <a href="mailto:lucasmdev@proton.me">Contact</a> &middot; Some links are affiliate links.</p>
+</footer>
+
+<a href="https://buymeacoffee.com/lucasmdev" target="_blank" rel="noopener" class="bmc-float" aria-label="Buy Me a Coffee">
+  <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt=""> Buy me a coffee
+</a>
+
+</body>
+</html>

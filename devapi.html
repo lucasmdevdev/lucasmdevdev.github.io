@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevAPI — Free Developer Utility API | LucasMdev</title>
+  <meta name="description" content="Free developer utility API: QR codes, UUIDs, hashing, JSON validation, placeholder images, password generation and more. 12 endpoints, zero setup.">
+  <meta name="author" content="Lucas M.">
+  <meta property="og:title" content="DevAPI — Free Developer Utility API">
+  <meta property="og:description" content="12 free API endpoints for developers. QR codes, UUIDs, hashing, base64, lorem ipsum, and more.">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://lucasmdevdev.github.io/devapi.html">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .devapi-hero {
+      text-align: center;
+      padding: 60px 0 40px;
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border);
+    }
+    .devapi-hero h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -.5px;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .devapi-hero h1 span { color: var(--accent); }
+    .devapi-hero .tagline {
+      font-size: 1.15rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .devapi-hero .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .devapi-hero .hero-stats .stat {
+      text-align: center;
+    }
+    .devapi-hero .hero-stats .stat strong {
+      display: block;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .devapi-hero .hero-stats .stat span {
+      font-size: .85rem;
+      color: var(--muted);
+    }
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: .95rem;
+      transition: background .15s, transform .15s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary {
+      background: var(--bg-alt);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Endpoints */
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -.3px;
+    }
+    .section-subtitle {
+      color: var(--muted);
+      margin-bottom: 32px;
+      font-size: .95rem;
+    }
+    .endpoints-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 56px;
+    }
+    @media (max-width: 600px) {
+      .endpoints-grid { grid-template-columns: 1fr; }
+      .devapi-hero h1 { font-size: 1.7rem; }
+    }
+    .endpoint-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .endpoint-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 16px rgba(79,70,229,.08);
+    }
+    .endpoint-card .method {
+      display: inline-block;
+      font-size: .72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-right: 6px;
+      font-family: 'Fira Code', 'Cascadia Code', monospace;
+      letter-spacing: .03em;
+    }
+    .method-get { background: #dcfce7; color: #166534; }
+    .method-post { background: #fef3c7; color: #92400e; }
+    .endpoint-card .path {
+      font-family: 'Fira Code', 'Cascadia Code', monospace;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .endpoint-card .desc {
+      color: var(--muted);
+      font-size: .88rem;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+    .endpoint-card .params {
+      margin-top: 10px;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+    .endpoint-card .params code {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: .78rem;
+    }
+
+    /* Code examples */
+    .code-examples {
+      margin-bottom: 56px;
+    }
+    .code-examples pre {
+      position: relative;
+    }
+    .code-label {
+      display: block;
+      font-size: .75rem;
+      color: #89b4fa;
+      margin-bottom: 4px;
+      font-family: 'Fira Code', monospace;
+      letter-spacing: .03em;
+    }
+    .code-comment { color: #6c7086; }
+    .code-string { color: #a6e3a1; }
+    .code-url { color: #89b4fa; }
+
+    /* Pricing */
+    .pricing-section {
+      margin-bottom: 56px;
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 600px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+    }
+    .pricing-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px;
+      text-align: center;
+    }
+    .pricing-card.featured {
+      border: 2px solid var(--accent);
+      background: linear-gradient(135deg, #f8f7ff 0%, #f0f4ff 100%);
+      position: relative;
+    }
+    .pricing-card .plan-name {
+      font-size: .85rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .pricing-card .price {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .pricing-card .price-period {
+      font-size: .85rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .pricing-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 24px;
+      text-align: left;
+    }
+    .pricing-card li {
+      padding: 6px 0;
+      font-size: .9rem;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+    .pricing-card li:last-child { border-bottom: none; }
+    .pricing-card li::before {
+      content: "✓ ";
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .badge-soon {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: .04em;
+      margin-left: 6px;
+    }
+
+    /* Rate limits info */
+    .rate-info {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 56px;
+    }
+    .rate-info h3 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+    .rate-info p {
+      color: var(--muted);
+      font-size: .9rem;
+      margin-bottom: 6px;
+      line-height: 1.6;
+    }
+    .rate-info code {
+      background: #fff;
+      border: 1px solid var(--border);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: .85em;
+    }
+
+    /* GitHub link */
+    .github-section {
+      text-align: center;
+      margin-bottom: 56px;
+      padding: 32px;
+      background: var(--bg-alt);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .github-section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+    .github-section p {
+      color: var(--muted);
+      font-size: .9rem;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">Lucas<span>M</span>.dev</a>
+    <nav>
+      <a href="/">Blog</a>
+      <a href="/ressources.html">Ressources</a>
+      <a href="mailto:lucasmdev@proton.me">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <a href="/" class="back-link">← Back to blog</a>
+
+  <!-- Hero -->
+  <section class="devapi-hero">
+    <h1>Dev<span>API</span></h1>
+    <p class="tagline">Free developer utility API. 12 endpoints, zero setup, no authentication required. Build faster.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <strong>12</strong>
+        <span>Endpoints</span>
+      </div>
+      <div class="stat">
+        <strong>0ms</strong>
+        <span>Setup time</span>
+      </div>
+      <div class="stat">
+        <strong>100</strong>
+        <span>Free req/day</span>
+      </div>
+    </div>
+    <div class="hero-buttons">
+      <a href="#pricing" class="btn btn-primary">Get API Key</a>
+      <a href="https://github.com/lucasmdevdev/devapi" target="_blank" rel="noopener" class="btn btn-secondary">View on GitHub</a>
+    </div>
+  </section>
+
+  <!-- Endpoints -->
+  <section>
+    <h2 class="section-title">Endpoints</h2>
+    <p class="section-subtitle">All endpoints return JSON (except images). No API key needed for the free tier.</p>
+
+    <div class="endpoints-grid">
+
+      <div class="endpoint-card">
+        <span class="method method-get">GET</span>
+        <span class="path">/api/qr</span>
+        <p class="desc">Generate QR codes from any text or URL. Returns a PNG image.</p>
+        <p class="params">Params: <code>text</code> (required), <code>size</code> (default: 200)</p>
+      </div>
+
+      <div class="endpoint-card">
+        <span class="method method-get">GET</span>
+        <span class="path">/api/uuid</span>
+        <p class="desc">Generate a random UUID v4. Useful for unique identifiers in your apps.</p>
+        <p class="params">Params: <code>count</code> (1-100, default: 1)</p>
+      </div>
+
+      <div class="endpoint-card">
+        <span class="method method-get">GET</span>
+        <span class="path">/api/hash</span>
+        <p class="desc">Hash any string with MD5, SHA1, SHA256, SHA512. Multiple algorithms at once.</p>
+        <p class="params">Params: <code>text</code> (required), <code>algo</code> (md5, sha256...)</p>
+      </div>
+
+      <div class="endpoint-card">
+        <span class="method method-post">POST</span>
+        <span class="path">/api/json/validate</span>
+        <p class="desc">Validate JSON structure. Returns detailed error messages with line numbers.</p>
+        <p class="params">Body: raw JSON string</p>
+      </div>
+
+      <div class="endpoint-card">
+        <span class="method method-get">GET</span>
+        <span class="path">/api/password</span>
+        <p class="desc">Generate secure random passwords with customizable length and character sets.</p>
+        <p class="params">Params: <code>length</code> (8-128), <code>uppercase</code>, <code>symbols</code></p>
+      </div>
+
+      <div class="endpoint-card">
+        <span class="method method-get">GET</span>
+        <span class="path">/api/placeholder/:WxH</span>
+        <p class="desc">Generate placeholder images with custom dimensions, colors, and text.</p>
+        <p class="params">Params: <code>bg</code> (hex color), <code>color</code>, <code>text</code></p>
+      </div>
+
+      <div class="endpoint-card">
+        <span class="method method-get">GET</span>
+        <span class="path">/api/base64/encode</span>
+        <p class="desc">Encode any string to Base64. Useful for embedding data in URLs or payloads.</p>
+        <p class="params">Params: <code>text</code> (required)</p>
+      </div>
+
+      <div class="endpoint-card">
+        <span class="method method-get">GET</span>
+        <span class="path">/api/base64/decode</span>
+        <p class="desc">Decode Base64 strings back to plain text.</p>
+        <p class="params">Params: <code>text</code> (required)</p>
+      </div>
+
+      <div class="endpoint-card">
+        <span class="method method-get">GET</span>
+        <span class="path">/api/ip</span>
+        <p class="desc">Get the caller's IP address with geolocation, ISP, and timezone info.</p>
+        <p class="params">No params required</p>
+      </div>
+
+      <div class="endpoint-card">
+        <span class="method method-get">GET</span>
+        <span class="path">/api/timestamp</span>
+        <p class="desc">Convert between Unix timestamps and human-readable dates. Supports timezones.</p>
+        <p class="params">Params: <code>ts</code> (Unix timestamp) or <code>date</code> (ISO string)</p>
+      </div>
+
+      <div class="endpoint-card">
+        <span class="method method-get">GET</span>
+        <span class="path">/api/lorem</span>
+        <p class="desc">Generate Lorem Ipsum placeholder text. Paragraphs, sentences, or words.</p>
+        <p class="params">Params: <code>type</code> (paragraphs|sentences|words), <code>count</code></p>
+      </div>
+
+      <div class="endpoint-card">
+        <span class="method method-get">GET</span>
+        <span class="path">/api/color</span>
+        <p class="desc">Convert colors between HEX, RGB, HSL formats. Get complementary colors.</p>
+        <p class="params">Params: <code>hex</code>, <code>rgb</code>, or <code>hsl</code></p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Code Examples -->
+  <section class="code-examples">
+    <h2 class="section-title">Quick Start</h2>
+    <p class="section-subtitle">Copy-paste these examples. No SDK, no setup, just curl.</p>
+
+    <pre><code><span class="code-comment"># Generate a QR code</span>
+curl <span class="code-url">"https://devapi.lucasmdev.dev/api/qr?text=https://github.com&size=300"</span> -o qr.png
+
+<span class="code-comment"># Generate UUIDs</span>
+curl <span class="code-url">"https://devapi.lucasmdev.dev/api/uuid?count=5"</span>
+<span class="code-comment"># → {"uuids":["550e8400-e29b-41d4-a716-446655440000",...]}</span>
+
+<span class="code-comment"># Hash a string</span>
+curl <span class="code-url">"https://devapi.lucasmdev.dev/api/hash?text=hello&algo=sha256"</span>
+<span class="code-comment"># → {"sha256":"2cf24dba5fb0a30e26e83b2ac5b9e29e..."}</span>
+
+<span class="code-comment"># Validate JSON</span>
+curl -X POST <span class="code-url">"https://devapi.lucasmdev.dev/api/json/validate"</span> \
+  -H <span class="code-string">"Content-Type: application/json"</span> \
+  -d <span class="code-string">'{"valid": true}'</span>
+
+<span class="code-comment"># Generate a secure password</span>
+curl <span class="code-url">"https://devapi.lucasmdev.dev/api/password?length=32&symbols=true"</span>
+<span class="code-comment"># → {"password":"aK#9mP!2xL..."}</span>
+
+<span class="code-comment"># Placeholder image (400x300, custom colors)</span>
+curl <span class="code-url">"https://devapi.lucasmdev.dev/api/placeholder/400x300?bg=4f46e5&color=fff&text=DevAPI"</span>
+
+<span class="code-comment"># Base64 encode/decode</span>
+curl <span class="code-url">"https://devapi.lucasmdev.dev/api/base64/encode?text=Hello%20World"</span>
+<span class="code-comment"># → {"encoded":"SGVsbG8gV29ybGQ="}</span>
+
+<span class="code-comment"># Get IP info</span>
+curl <span class="code-url">"https://devapi.lucasmdev.dev/api/ip"</span>
+<span class="code-comment"># → {"ip":"203.0.113.42","country":"FR","city":"Paris",...}</span>
+
+<span class="code-comment"># Timestamp conversion</span>
+curl <span class="code-url">"https://devapi.lucasmdev.dev/api/timestamp?ts=1711756800"</span>
+
+<span class="code-comment"># Lorem ipsum</span>
+curl <span class="code-url">"https://devapi.lucasmdev.dev/api/lorem?type=paragraphs&count=3"</span>
+
+<span class="code-comment"># Color conversion</span>
+curl <span class="code-url">"https://devapi.lucasmdev.dev/api/color?hex=4f46e5"</span>
+<span class="code-comment"># → {"hex":"#4f46e5","rgb":"rgb(79,70,229)","hsl":"hsl(244,76%,59%)"}</span></code></pre>
+  </section>
+
+  <!-- Rate Limits -->
+  <div class="rate-info">
+    <h3>Rate Limits</h3>
+    <p><strong>Free tier:</strong> 100 requests per day per IP. No API key required. All 12 endpoints included.</p>
+    <p><strong>Premium tier:</strong> Unlimited requests with an API key. Pass your key via the <code>X-API-Key</code> header or <code>?apikey=</code> query parameter.</p>
+    <p>Rate limit headers are included in every response: <code>X-RateLimit-Remaining</code>, <code>X-RateLimit-Reset</code>.</p>
+  </div>
+
+  <!-- Pricing -->
+  <section class="pricing-section" id="pricing">
+    <h2 class="section-title">Pricing</h2>
+    <p class="section-subtitle">Start free. Upgrade when you need more.</p>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="plan-name">Free</div>
+        <div class="price">0 &euro;</div>
+        <div class="price-period">forever</div>
+        <ul>
+          <li>12 endpoints</li>
+          <li>100 requests / day</li>
+          <li>No API key needed</li>
+          <li>JSON responses</li>
+          <li>CORS enabled</li>
+        </ul>
+        <a href="#endpoints" class="btn btn-secondary" style="width:100%;text-align:center;">Start for Free</a>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="plan-name">Premium <span class="badge-soon">COMING SOON</span></div>
+        <div class="price">5 &euro;</div>
+        <div class="price-period">/ month</div>
+        <ul>
+          <li>Everything in Free</li>
+          <li>Unlimited requests</li>
+          <li>Dedicated API key</li>
+          <li>Priority support</li>
+          <li>99.9% uptime SLA</li>
+        </ul>
+        <a href="mailto:lucasmdev@proton.me?subject=DevAPI%20Premium%20Interest" class="btn btn-primary" style="width:100%;text-align:center;">Get Notified</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- GitHub -->
+  <section class="github-section">
+    <h3>Open Source</h3>
+    <p>DevAPI is open source. Star the repo, report issues, or contribute new endpoints.</p>
+    <a href="https://github.com/lucasmdevdev/devapi" target="_blank" rel="noopener" class="btn btn-secondary">
+      View on GitHub
+    </a>
+  </section>
+
+
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 8px; margin: 30px 0; color: white; text-align: center;">
+  <p style="margin: 0 0 15px; font-weight: 600;">Cet article vous a été utile ?</p>
+  <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+    <a href="https://liberapay.com/lucasmdev/" target="_blank" rel="noopener" style="background: #fff; color: #667eea; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">💙 Liberapay</a>
+    <a href="https://www.paypal.me/lucasmdev" target="_blank" rel="noopener" style="background: #fff; color: #667eea; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">💵 PayPal</a>
+    <a href="https://ko-fi.com/lucasmdev" target="_blank" rel="noopener" style="background: #fff; color: #667eea; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">☕ Ko-fi</a>
+  </div>
+</div>
+</main>
+
+<footer>
+  <p>&copy; 2026 LucasMdev &middot; <a href="/">Blog</a> &middot;
+    <a href="/ressources.html">Ressources</a> &middot;
+    <a href="mailto:lucasmdev@proton.me">Contact</a></p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Implement API Rate Limiting in Node.js (2026 Guide)</title>
+  <meta name="description" content="Complete guide to API rate limiting in Node.js. Learn express-rate-limit, Redis-based limiting, sliding window algorithms, and production-ready patterns with real code examples.">
+  <meta name="author" content="Lucas M.">
+  <meta name="date" content="2026-03-29">
+  <meta name="tags" content="Node.js,API,Backend">
+  <meta property="og:title" content="How to Implement API Rate Limiting in Node.js (2026 Guide)">
+  <meta property="og:description" content="Complete guide to API rate limiting in Node.js. Express-rate-limit, Redis, sliding window algorithms, and production patterns.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://lucasmdevdev.github.io/api-rate-limiting-nodejs-2026.html">
+  <link rel="canonical" href="https://lucasmdevdev.github.io/api-rate-limiting-nodejs-2026.html">
+  <link rel="stylesheet" href="style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Implement API Rate Limiting in Node.js (2026 Guide)",
+  "description": "Complete guide to API rate limiting in Node.js. Learn express-rate-limit, Redis-based limiting, sliding window algorithms, and production-ready patterns.",
+  "author": {
+    "@type": "Person",
+    "name": "Lucas M."
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "LucasMdev",
+    "url": "https://lucasmdevdev.github.io"
+  },
+  "url": "https://lucasmdevdev.github.io/api-rate-limiting-nodejs-2026.html",
+  "datePublished": "2026-03-29",
+  "dateModified": "2026-03-29",
+  "inLanguage": "en",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://lucasmdevdev.github.io/api-rate-limiting-nodejs-2026.html"
+  },
+  "keywords": "Node.js, API, rate limiting, Express, Redis"
+}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">Lucas<span>M</span>.dev</a>
+    <nav>
+      <a href="/">Blog</a>
+      <a href="/ressources.html">Ressources</a>
+      <a href="mailto:lucasmdev@proton.me">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<article class="article-content">
+
+  <a href="/" class="back-link">&larr; Back to all articles</a>
+
+  <div class="article-header">
+    <div class="article-meta">
+      <span>Node.js</span>
+      <span>API</span>
+      March 29, 2026
+    </div>
+    <h1>How to Implement API Rate Limiting in Node.js (2026 Guide)</h1>
+    <p class="article-intro">Rate limiting is the single most important defense your API has against abuse, DDoS attacks, and runaway costs. This guide covers everything from basic express-rate-limit to production-grade Redis-backed sliding window implementations.</p>
+  </div>
+
+  <p>If you expose an API to the internet without rate limiting, it is only a matter of time before something goes wrong. A single misbehaving client can bring down your entire service, rack up cloud bills, or scrape your data dry. Rate limiting solves this by capping how many requests a client can make in a given time window.</p>
+
+  <p>In this guide, we will build rate limiting from scratch in Node.js, starting with the simplest approach and progressively moving to production-grade solutions. Every code example is tested and ready to use.</p>
+
+  <h2>Why Rate Limiting Matters in 2026</h2>
+
+  <p>APIs are the backbone of modern applications. Whether you are building a public REST API, a microservice mesh, or a simple backend for your SaaS, rate limiting protects you on multiple fronts:</p>
+
+  <ul>
+    <li><strong>Preventing abuse</strong> — bots, scrapers, and malicious actors cannot overwhelm your server</li>
+    <li><strong>Fair usage</strong> — no single client monopolizes your resources at the expense of others</li>
+    <li><strong>Cost control</strong> — downstream services (databases, third-party APIs) have their own limits; rate limiting prevents cascade failures</li>
+    <li><strong>Compliance</strong> — many SLAs and API partnerships require you to enforce rate limits</li>
+    <li><strong>Stability</strong> — predictable load means predictable performance</li>
+  </ul>
+
+  <p>The cost of not having rate limiting is almost always higher than implementing it. Let us start with the simplest approach.</p>
+
+  <h2>1. Quick Start with express-rate-limit</h2>
+
+  <p>The <code>express-rate-limit</code> package is the most popular rate limiting middleware for Express.js. It works out of the box with zero configuration for simple use cases.</p>
+
+  <h3>Installation</h3>
+
+<pre><code>npm install express express-rate-limit</code></pre>
+
+  <h3>Basic Setup</h3>
+
+<pre><code>import express from 'express';
+import rateLimit from 'express-rate-limit';
+
+const app = express();
+
+// Global rate limit: 100 requests per 15 minutes per IP
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,  // 15 minutes
+  max: 100,                    // limit each IP to 100 requests per window
+  standardHeaders: true,       // Return rate limit info in `RateLimit-*` headers
+  legacyHeaders: false,        // Disable the `X-RateLimit-*` headers
+  message: {
+    status: 429,
+    error: 'Too many requests. Please try again later.',
+  },
+});
+
+app.use(globalLimiter);
+
+app.get('/api/data', (req, res) =&gt; {
+  res.json({ message: 'Here is your data' });
+});
+
+app.listen(3000, () =&gt; console.log('Server running on port 3000'));</code></pre>
+
+  <p>This gives you immediate protection. Every IP address is limited to 100 requests per 15-minute window. When a client exceeds the limit, they receive a <code>429 Too Many Requests</code> response.</p>
+
+  <h3>Route-Specific Limits</h3>
+
+  <p>Not all endpoints are equal. Your login endpoint should have stricter limits than your public data endpoint:</p>
+
+<pre><code>// Strict limit for authentication routes
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,  // only 5 login attempts per 15 minutes
+  message: {
+    status: 429,
+    error: 'Too many login attempts. Please wait 15 minutes.',
+  },
+  skipSuccessfulRequests: true,  // don't count successful logins
+});
+
+// Relaxed limit for read-only endpoints
+const readLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 60,  // 60 requests per minute
+});
+
+app.post('/api/auth/login', authLimiter, loginHandler);
+app.get('/api/posts', readLimiter, getPostsHandler);
+app.post('/api/posts', globalLimiter, createPostHandler);</code></pre>
+
+  <p>The <code>skipSuccessfulRequests</code> option is particularly useful for login endpoints. If the user enters the correct password, it does not count against their limit. Only failed attempts accumulate.</p>
+
+  <h2>2. Understanding Rate Limiting Algorithms</h2>
+
+  <p>Before diving into more advanced implementations, it helps to understand the algorithms behind rate limiting. There are four main approaches:</p>
+
+  <h3>Fixed Window</h3>
+
+  <p>The simplest algorithm. Divide time into fixed windows (e.g., 1-minute blocks) and count requests in each window. When the count exceeds the limit, reject requests until the next window starts.</p>
+
+  <p><strong>Pros:</strong> Simple, low memory usage. <strong>Cons:</strong> A burst of requests at the boundary of two windows can allow 2x the intended rate.</p>
+
+  <h3>Sliding Window Log</h3>
+
+  <p>Store a timestamp for every request. To check if a new request is allowed, count all timestamps within the last N seconds. This is perfectly accurate but uses more memory.</p>
+
+  <h3>Sliding Window Counter</h3>
+
+  <p>A hybrid approach. Keep counters for the current and previous fixed windows, then calculate a weighted count based on how far into the current window we are. This is what most production systems use.</p>
+
+<pre><code>// Sliding window counter formula:
+// weighted_count = (previous_window_count * overlap_percentage) + current_window_count
+//
+// Example: window = 60s, we are 20s into the current window
+// overlap = (60 - 20) / 60 = 0.667
+// If previous window had 80 requests and current has 30:
+// weighted_count = (80 * 0.667) + 30 = 83.3
+// If limit is 100, this request is allowed</code></pre>
+
+  <h3>Token Bucket</h3>
+
+  <p>Each client has a "bucket" of tokens that refills at a constant rate. Each request consumes one token. If the bucket is empty, the request is rejected. This naturally allows short bursts while maintaining an average rate.</p>
+
+  <h2>3. Redis-Based Rate Limiting for Production</h2>
+
+  <p>The in-memory store used by <code>express-rate-limit</code> has a critical limitation: it does not work across multiple server instances. If your API runs on 3 containers behind a load balancer, each container has its own counter. A client could make 100 requests to each container, effectively bypassing your limit.</p>
+
+  <p>Redis solves this by providing a shared, fast data store that all instances can access.</p>
+
+  <h3>Using rate-limit-redis</h3>
+
+<pre><code>npm install express-rate-limit rate-limit-redis ioredis</code></pre>
+
+<pre><code>import express from 'express';
+import rateLimit from 'express-rate-limit';
+import RedisStore from 'rate-limit-redis';
+import Redis from 'ioredis';
+
+const app = express();
+
+const redisClient = new Redis({
+  host: process.env.REDIS_HOST || '127.0.0.1',
+  port: parseInt(process.env.REDIS_PORT || '6379'),
+  password: process.env.REDIS_PASSWORD,
+  enableOfflineQueue: false,  // fail fast if Redis is down
+});
+
+redisClient.on('error', (err) =&gt; {
+  console.error('Redis connection error:', err);
+});
+
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000,  // 1 minute
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  store: new RedisStore({
+    sendCommand: (...args) =&gt; redisClient.call(...args),
+  }),
+  message: {
+    status: 429,
+    error: 'Rate limit exceeded. Try again in a minute.',
+    retryAfter: 60,
+  },
+});
+
+app.use('/api/', apiLimiter);
+
+app.get('/api/users', (req, res) =&gt; {
+  res.json({ users: [] });
+});
+
+app.listen(3000);</code></pre>
+
+  <p>Now every instance of your API shares the same rate limit counters through Redis. This is the standard approach for any production deployment.</p>
+
+  <h2>4. Building a Sliding Window Rate Limiter from Scratch</h2>
+
+  <p>Sometimes you need more control than a library provides. Here is a sliding window counter implementation using Redis sorted sets:</p>
+
+<pre><code>import Redis from 'ioredis';
+
+const redis = new Redis();
+
+interface RateLimitResult {
+  allowed: boolean;
+  remaining: number;
+  resetAt: number;
+  retryAfter: number | null;
+}
+
+async function slidingWindowRateLimit(
+  key: string,
+  limit: number,
+  windowMs: number
+): Promise&lt;RateLimitResult&gt; {
+  const now = Date.now();
+  const windowStart = now - windowMs;
+
+  // Use a Redis pipeline for atomic operations
+  const pipeline = redis.pipeline();
+
+  // Remove expired entries
+  pipeline.zremrangebyscore(key, 0, windowStart);
+
+  // Count current entries
+  pipeline.zcard(key);
+
+  // Add the current request (we'll remove it if rejected)
+  pipeline.zadd(key, now.toString(), `${now}-${Math.random()}`);
+
+  // Set expiry on the key
+  pipeline.pexpire(key, windowMs);
+
+  const results = await pipeline.exec();
+  const currentCount = results?.[1]?.[1] as number;
+
+  if (currentCount >= limit) {
+    // Over limit — remove the entry we just added
+    await redis.zremrangebyscore(key, now, now);
+
+    // Find when the oldest entry in the window expires
+    const oldest = await redis.zrange(key, 0, 0, 'WITHSCORES');
+    const oldestTime = oldest.length &gt;= 2 ? parseInt(oldest[1]) : now;
+    const retryAfter = Math.ceil((oldestTime + windowMs - now) / 1000);
+
+    return {
+      allowed: false,
+      remaining: 0,
+      resetAt: oldestTime + windowMs,
+      retryAfter,
+    };
+  }
+
+  return {
+    allowed: true,
+    remaining: limit - currentCount - 1,
+    resetAt: now + windowMs,
+    retryAfter: null,
+  };
+}
+
+// Usage as Express middleware
+function createSlidingWindowLimiter(limit: number, windowMs: number) {
+  return async (req: any, res: any, next: any) =&gt; {
+    const key = `ratelimit:${req.ip}`;
+    const result = await slidingWindowRateLimit(key, limit, windowMs);
+
+    // Set standard headers
+    res.set('RateLimit-Limit', limit.toString());
+    res.set('RateLimit-Remaining', result.remaining.toString());
+    res.set('RateLimit-Reset', Math.ceil(result.resetAt / 1000).toString());
+
+    if (!result.allowed) {
+      res.set('Retry-After', result.retryAfter!.toString());
+      return res.status(429).json({
+        error: 'Too many requests',
+        retryAfter: result.retryAfter,
+      });
+    }
+
+    next();
+  };
+}</code></pre>
+
+  <p>This implementation gives you precise sliding window behavior. The sorted set stores each request timestamp, and we remove expired entries on every check. The trade-off is slightly more Redis memory usage compared to a simple counter, but the accuracy is worth it for most APIs.</p>
+
+  <h2>5. Token Bucket Implementation</h2>
+
+  <p>The token bucket algorithm is ideal when you want to allow short bursts while maintaining an average rate. Here is a Redis-based implementation:</p>
+
+<pre><code>async function tokenBucket(
+  key: string,
+  bucketSize: number,      // max tokens (burst capacity)
+  refillRate: number,       // tokens added per second
+): Promise&lt;{ allowed: boolean; tokens: number }&gt; {
+  const now = Date.now();
+  const bucketKey = `bucket:${key}`;
+
+  // Lua script for atomic token bucket operation
+  const luaScript = `
+    local bucket_key = KEYS[1]
+    local bucket_size = tonumber(ARGV[1])
+    local refill_rate = tonumber(ARGV[2])
+    local now = tonumber(ARGV[3])
+
+    local bucket = redis.call('HMGET', bucket_key, 'tokens', 'last_refill')
+    local tokens = tonumber(bucket[1])
+    local last_refill = tonumber(bucket[2])
+
+    if tokens == nil then
+      tokens = bucket_size
+      last_refill = now
+    end
+
+    -- Calculate tokens to add since last refill
+    local elapsed = (now - last_refill) / 1000
+    tokens = math.min(bucket_size, tokens + (elapsed * refill_rate))
+    last_refill = now
+
+    local allowed = 0
+    if tokens >= 1 then
+      tokens = tokens - 1
+      allowed = 1
+    end
+
+    redis.call('HMSET', bucket_key, 'tokens', tokens, 'last_refill', last_refill)
+    redis.call('PEXPIRE', bucket_key, math.ceil(bucket_size / refill_rate) * 1000 + 1000)
+
+    return {allowed, math.floor(tokens)}
+  `;
+
+  const result = await redis.eval(
+    luaScript, 1, bucketKey,
+    bucketSize, refillRate, now
+  ) as [number, number];
+
+  return {
+    allowed: result[0] === 1,
+    tokens: result[1],
+  };
+}</code></pre>
+
+  <p>The Lua script ensures atomicity — no race conditions even under high concurrency. The bucket refills gradually, so a client that has been idle for a while gets their full burst capacity back.</p>
+
+  <h2>6. Advanced Patterns</h2>
+
+  <h3>Per-User Rate Limiting with API Keys</h3>
+
+  <p>IP-based rate limiting is a good default, but for authenticated APIs you should limit by user or API key:</p>
+
+<pre><code>const apiKeyLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 100,
+  keyGenerator: (req) =&gt; {
+    // Use API key if present, fall back to IP
+    return req.headers['x-api-key']?.toString() || req.ip;
+  },
+  store: new RedisStore({
+    sendCommand: (...args) =&gt; redisClient.call(...args),
+  }),
+});</code></pre>
+
+  <h3>Tiered Rate Limits</h3>
+
+  <p>Different plans get different limits. This is how most SaaS APIs work:</p>
+
+<pre><code>function tieredLimiter() {
+  const tiers = {
+    free:       { windowMs: 60_000, max: 10 },
+    starter:    { windowMs: 60_000, max: 60 },
+    pro:        { windowMs: 60_000, max: 300 },
+    enterprise: { windowMs: 60_000, max: 1000 },
+  };
+
+  return async (req: any, res: any, next: any) =&gt; {
+    const user = req.user;  // from auth middleware
+    const tier = user?.plan || 'free';
+    const config = tiers[tier] || tiers.free;
+
+    const key = `ratelimit:${tier}:${user?.id || req.ip}`;
+    const result = await slidingWindowRateLimit(key, config.max, config.windowMs);
+
+    res.set('RateLimit-Limit', config.max.toString());
+    res.set('RateLimit-Remaining', result.remaining.toString());
+    res.set('X-RateLimit-Plan', tier);
+
+    if (!result.allowed) {
+      return res.status(429).json({
+        error: 'Rate limit exceeded',
+        plan: tier,
+        upgrade: tier === 'free' ? 'https://yourapi.com/pricing' : undefined,
+      });
+    }
+
+    next();
+  };
+}</code></pre>
+
+  <h3>Graceful Degradation When Redis Is Down</h3>
+
+  <p>Your API should not go down just because Redis is unavailable. Implement a fallback:</p>
+
+<pre><code>import rateLimit from 'express-rate-limit';
+import RedisStore from 'rate-limit-redis';
+
+function createResilientLimiter(options: any) {
+  let useRedis = true;
+
+  const redisClient = new Redis({
+    host: process.env.REDIS_HOST,
+    enableOfflineQueue: false,
+    retryStrategy: (times: number) =&gt; {
+      if (times &gt; 3) {
+        useRedis = false;
+        console.warn('Redis unavailable, falling back to in-memory rate limiting');
+        return null;  // stop retrying
+      }
+      return Math.min(times * 200, 2000);
+    },
+  });
+
+  redisClient.on('connect', () =&gt; {
+    useRedis = true;
+    console.log('Redis connected, using distributed rate limiting');
+  });
+
+  return rateLimit({
+    ...options,
+    store: useRedis
+      ? new RedisStore({ sendCommand: (...args: any[]) =&gt; redisClient.call(...args) })
+      : undefined,  // falls back to in-memory
+  });
+}</code></pre>
+
+  <h2>7. Rate Limit Response Headers</h2>
+
+  <p>Good rate limiting is transparent. Your API should always tell clients about their limits through standard headers:</p>
+
+  <table>
+    <tr>
+      <th>Header</th>
+      <th>Purpose</th>
+      <th>Example</th>
+    </tr>
+    <tr>
+      <td><code>RateLimit-Limit</code></td>
+      <td>Maximum requests allowed in the window</td>
+      <td><code>100</code></td>
+    </tr>
+    <tr>
+      <td><code>RateLimit-Remaining</code></td>
+      <td>Requests remaining in the current window</td>
+      <td><code>73</code></td>
+    </tr>
+    <tr>
+      <td><code>RateLimit-Reset</code></td>
+      <td>Unix timestamp when the window resets</td>
+      <td><code>1711728000</code></td>
+    </tr>
+    <tr>
+      <td><code>Retry-After</code></td>
+      <td>Seconds to wait before retrying (only on 429)</td>
+      <td><code>30</code></td>
+    </tr>
+  </table>
+
+  <p>These headers follow the <a href="https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/" target="_blank" rel="noopener">IETF RateLimit header fields draft standard</a>. Clients can use them to implement automatic backoff and retry logic.</p>
+
+  <h2>8. Testing Your Rate Limiter</h2>
+
+  <p>Never deploy rate limiting without testing it. Here is a simple test script:</p>
+
+<pre><code>// test-rate-limit.ts
+async function testRateLimit() {
+  const url = 'http://localhost:3000/api/data';
+  const results = { success: 0, limited: 0, errors: 0 };
+
+  // Fire 150 requests rapidly
+  const promises = Array.from({ length: 150 }, async (_, i) =&gt; {
+    try {
+      const res = await fetch(url);
+      if (res.status === 200) results.success++;
+      else if (res.status === 429) results.limited++;
+      else results.errors++;
+
+      // Log headers from first limited response
+      if (res.status === 429 &amp;&amp; results.limited === 1) {
+        console.log('Rate limit headers:');
+        console.log('  Limit:', res.headers.get('ratelimit-limit'));
+        console.log('  Remaining:', res.headers.get('ratelimit-remaining'));
+        console.log('  Reset:', res.headers.get('ratelimit-reset'));
+        console.log('  Retry-After:', res.headers.get('retry-after'));
+      }
+    } catch {
+      results.errors++;
+    }
+  });
+
+  await Promise.all(promises);
+  console.log(`\nResults: ${results.success} OK, ${results.limited} limited, ${results.errors} errors`);
+}
+
+testRateLimit();</code></pre>
+
+  <h2>9. Common Mistakes to Avoid</h2>
+
+  <p>After building rate limiters for several production APIs, here are the pitfalls I see most often:</p>
+
+  <ol>
+    <li><strong>Trusting X-Forwarded-For blindly</strong> — this header can be spoofed. Only trust it if your reverse proxy (nginx, CloudFlare) sets it and you strip client-provided values.</li>
+    <li><strong>Rate limiting after expensive work</strong> — check the rate limit before processing the request, not after. Put the middleware first.</li>
+    <li><strong>No fallback when Redis dies</strong> — always have a degradation strategy (see section 6).</li>
+    <li><strong>Same limits for all endpoints</strong> — your login route needs much stricter limits than your read endpoints.</li>
+    <li><strong>Forgetting WebSocket connections</strong> — rate limit connection attempts and messages separately.</li>
+    <li><strong>Not returning standard headers</strong> — clients need to know their limits to behave properly.</li>
+  </ol>
+
+  <h2>10. Complete Production Setup</h2>
+
+  <p>Here is a complete, production-ready rate limiting setup combining everything we have covered:</p>
+
+<pre><code>// rate-limiter.ts
+import rateLimit from 'express-rate-limit';
+import RedisStore from 'rate-limit-redis';
+import Redis from 'ioredis';
+
+const redis = new Redis({
+  host: process.env.REDIS_HOST || '127.0.0.1',
+  port: parseInt(process.env.REDIS_PORT || '6379'),
+  password: process.env.REDIS_PASSWORD,
+});
+
+function createLimiter(name: string, windowMs: number, max: number) {
+  return rateLimit({
+    windowMs,
+    max,
+    standardHeaders: true,
+    legacyHeaders: false,
+    store: new RedisStore({
+      sendCommand: (...args: any[]) =&gt; redis.call(...args),
+      prefix: `rl:${name}:`,
+    }),
+    keyGenerator: (req) =&gt; req.user?.id || req.ip,
+    handler: (req, res) =&gt; {
+      res.status(429).json({
+        error: 'Too many requests',
+        limit: max,
+        windowMs,
+        retryAfter: res.getHeader('Retry-After'),
+      });
+    },
+  });
+}
+
+export const globalLimiter = createLimiter('global', 60_000, 60);
+export const authLimiter = createLimiter('auth', 15 * 60_000, 5);
+export const uploadLimiter = createLimiter('upload', 60_000, 10);
+export const searchLimiter = createLimiter('search', 60_000, 30);
+
+// app.ts
+import express from 'express';
+import { globalLimiter, authLimiter, uploadLimiter, searchLimiter } from './rate-limiter';
+
+const app = express();
+
+app.use(globalLimiter);
+app.post('/api/auth/*', authLimiter);
+app.post('/api/upload', uploadLimiter);
+app.get('/api/search', searchLimiter);
+
+// ... your routes</code></pre>
+
+  <div class="article-cta">
+    <p>Building a new API from scratch? The <a href="dev-starter-kit.html">Developer Starter Kit 2026</a> includes production-ready Express.js boilerplate with rate limiting, authentication, Docker setup, and CI/CD pipelines already configured. Skip the boilerplate and start building.</p>
+  </div>
+
+  <h2>Summary</h2>
+
+  <p>Rate limiting is not optional for production APIs. Here is the decision tree:</p>
+
+  <ul>
+    <li><strong>Single server, low traffic</strong> — <code>express-rate-limit</code> with in-memory store is fine</li>
+    <li><strong>Multiple instances or moderate traffic</strong> — add Redis with <code>rate-limit-redis</code></li>
+    <li><strong>High traffic with tiered plans</strong> — custom sliding window with Redis sorted sets</li>
+    <li><strong>Need burst tolerance</strong> — token bucket algorithm</li>
+  </ul>
+
+  <p>Start with <code>express-rate-limit</code>, add Redis when you scale, and customize when your requirements demand it. The important thing is to have rate limiting from day one.</p>
+
+  <div class="related-articles">
+    <h3>Related Articles</h3>
+    <ul>
+      <li><a href="creer-api-rest-nodejs-2026.html">Build a REST API with Node.js and Express (Complete Guide)</a></li>
+      <li><a href="docker-compose-production-2026.html">Docker Compose for Production: The Complete Guide (2026)</a></li>
+      <li><a href="github-actions-ci-cd-2026.html">GitHub Actions CI/CD: From Zero to Auto-Deploy (2026)</a></li>
+      <li><a href="dev-starter-kit.html">Developer Starter Kit 2026 — 15+ Production-Ready Files</a></li>
+    </ul>
+  </div>
+
+
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 8px; margin: 30px 0; color: white; text-align: center;">
+  <p style="margin: 0 0 15px; font-weight: 600;">Cet article vous a été utile ?</p>
+  <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+    <a href="https://liberapay.com/lucasmdev/" target="_blank" rel="noopener" style="background: #fff; color: #667eea; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">💙 Liberapay</a>
+    <a href="https://www.paypal.me/lucasmdev" target="_blank" rel="noopener" style="background: #fff; color: #667eea; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">💵 PayPal</a>
+    <a href="https://ko-fi.com/lucasmdev" target="_blank" rel="noopener" style="background: #fff; color: #667eea; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">☕ Ko-fi</a>
+  </div>
+</div>
+</article>
+</main>
+
+<div class="support-section">
+  <h3>Found this helpful?</h3>
+  <p>If my articles save you time, consider supporting the blog. Every contribution counts!</p>
+  <div class="support-buttons">
+    <a href="https://buymeacoffee.com/lucasmdev" target="_blank" rel="noopener" class="support-btn support-btn--bmc">
+      <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt=""> Buy me a coffee
+    </a>
+    <a href="https://ko-fi.com/lucasmdev" target="_blank" rel="noopener" class="support-btn support-btn--kofi">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"/></svg>
+      Support on Ko-fi
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2026 LucasMdev &middot; <a href="/ressources.html">Resources</a>
+      <a href="mailto:lucasmdev@proton.me">Contact</a> &middot; Some links are affiliate links.</p>
+</footer>
+
+<a href="https://buymeacoffee.com/lucasmdev" target="_blank" rel="noopener" class="bmc-float" aria-label="Buy Me a Coffee">
+  <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt=""> Buy me a coffee
+</a>
+
+</body>
+</html>

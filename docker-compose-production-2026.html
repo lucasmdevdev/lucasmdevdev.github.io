@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Docker Compose for Production: The Complete Guide (2026)</title>
+  <meta name="description" content="Production-ready Docker Compose guide. Multi-service setups, health checks, restart policies, secrets management, logging, and real docker-compose.yml examples you can use today.">
+  <meta name="author" content="Lucas M.">
+  <meta name="date" content="2026-03-29">
+  <meta name="tags" content="Docker,DevOps">
+  <meta property="og:title" content="Docker Compose for Production: The Complete Guide (2026)">
+  <meta property="og:description" content="Production-ready Docker Compose: multi-service setups, health checks, secrets, logging, and real examples.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://lucasmdevdev.github.io/docker-compose-production-2026.html">
+  <link rel="canonical" href="https://lucasmdevdev.github.io/docker-compose-production-2026.html">
+  <link rel="stylesheet" href="style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Docker Compose for Production: The Complete Guide (2026)",
+  "description": "Production-ready Docker Compose guide. Multi-service setups, health checks, restart policies, secrets management, and real docker-compose.yml examples.",
+  "author": {
+    "@type": "Person",
+    "name": "Lucas M."
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "LucasMdev",
+    "url": "https://lucasmdevdev.github.io"
+  },
+  "url": "https://lucasmdevdev.github.io/docker-compose-production-2026.html",
+  "datePublished": "2026-03-29",
+  "dateModified": "2026-03-29",
+  "inLanguage": "en",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://lucasmdevdev.github.io/docker-compose-production-2026.html"
+  },
+  "keywords": "Docker, Docker Compose, DevOps, production, deployment"
+}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">Lucas<span>M</span>.dev</a>
+    <nav>
+      <a href="/">Blog</a>
+      <a href="/ressources.html">Ressources</a>
+      <a href="mailto:lucasmdev@proton.me">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<article class="article-content">
+
+  <a href="/" class="back-link">&larr; Back to all articles</a>
+
+  <div class="article-header">
+    <div class="article-meta">
+      <span>Docker</span>
+      <span>DevOps</span>
+      March 29, 2026
+    </div>
+    <h1>Docker Compose for Production: The Complete Guide (2026)</h1>
+    <p class="article-intro">Docker Compose is not just for local development. With the right configuration, it can power production workloads reliably. This guide covers everything you need to go from a dev-only docker-compose.yml to a battle-tested production setup.</p>
+  </div>
+
+  <p>Most Docker Compose tutorials stop at <code>docker compose up</code> and call it a day. That works fine on your laptop, but production is a different world. Services crash, disks fill up, secrets leak, and logs disappear. This guide addresses all of it.</p>
+
+  <p>We will build a complete production setup step by step: a Node.js API, PostgreSQL database, Redis cache, and Nginx reverse proxy. Every configuration decision is explained so you can adapt it to your own stack.</p>
+
+  <h2>1. Production vs Development: What Changes</h2>
+
+  <p>Before writing any YAML, let us be clear about what production requires that development does not:</p>
+
+  <table>
+    <tr>
+      <th>Concern</th>
+      <th>Development</th>
+      <th>Production</th>
+    </tr>
+    <tr>
+      <td>Restart policy</td>
+      <td>None or <code>no</code></td>
+      <td><code>unless-stopped</code> or <code>always</code></td>
+    </tr>
+    <tr>
+      <td>Health checks</td>
+      <td>Optional</td>
+      <td>Required</td>
+    </tr>
+    <tr>
+      <td>Secrets</td>
+      <td>In <code>.env</code> file</td>
+      <td>Docker secrets or external vault</td>
+    </tr>
+    <tr>
+      <td>Volumes</td>
+      <td>Bind mounts for hot reload</td>
+      <td>Named volumes with backups</td>
+    </tr>
+    <tr>
+      <td>Logging</td>
+      <td>Console output</td>
+      <td>Log drivers with rotation</td>
+    </tr>
+    <tr>
+      <td>Resources</td>
+      <td>Unlimited</td>
+      <td>CPU/memory limits set</td>
+    </tr>
+    <tr>
+      <td>Networking</td>
+      <td>Default bridge</td>
+      <td>Custom networks with isolation</td>
+    </tr>
+    <tr>
+      <td>Images</td>
+      <td>Build locally</td>
+      <td>Pull from registry with pinned tags</td>
+    </tr>
+  </table>
+
+  <h2>2. The Base: Multi-Service docker-compose.yml</h2>
+
+  <p>Here is our complete production docker-compose.yml. We will break down every section afterward:</p>
+
+<pre><code># docker-compose.yml — Production
+version: "3.9"
+
+services:
+  # ---- API ----
+  api:
+    image: ghcr.io/yourorg/api:${APP_VERSION:-latest}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://app:${DB_PASSWORD}@postgres:5432/appdb
+      REDIS_URL: redis://redis:6379
+      PORT: "3000"
+    ports:
+      - "127.0.0.1:3000:3000"  # Only expose to localhost
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - frontend
+      - backend
+
+  # ---- PostgreSQL ----
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: appdb
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d appdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - backend
+
+  # ---- Redis ----
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 300M
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "3"
+    networks:
+      - backend
+
+  # ---- Nginx Reverse Proxy ----
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_cache:/var/cache/nginx
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 128M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    networks:
+      - frontend
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  nginx_cache:
+    driver: local
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+    internal: true  # No external access</code></pre>
+
+  <p>Let us break down the key decisions in this configuration.</p>
+
+  <h2>3. Health Checks: The Foundation of Reliability</h2>
+
+  <p>Health checks are the single most important production configuration. Without them, Docker has no way of knowing whether your service is actually working. A container can be "running" while the application inside it has crashed, deadlocked, or lost its database connection.</p>
+
+<pre><code>healthcheck:
+  test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+  interval: 30s     # Check every 30 seconds
+  timeout: 5s       # Fail if no response in 5 seconds
+  retries: 3        # Mark unhealthy after 3 consecutive failures
+  start_period: 10s # Grace period for startup</code></pre>
+
+  <p>The health check endpoint itself should verify actual functionality, not just return 200:</p>
+
+<pre><code>// health.ts — Express health check endpoint
+app.get('/health', async (req, res) =&gt; {
+  const checks = {
+    uptime: process.uptime(),
+    timestamp: Date.now(),
+    database: 'unknown',
+    redis: 'unknown',
+  };
+
+  try {
+    // Check database connection
+    await prisma.$queryRaw`SELECT 1`;
+    checks.database = 'healthy';
+  } catch (err) {
+    checks.database = 'unhealthy';
+    return res.status(503).json(checks);
+  }
+
+  try {
+    // Check Redis connection
+    await redis.ping();
+    checks.redis = 'healthy';
+  } catch (err) {
+    checks.redis = 'unhealthy';
+    return res.status(503).json(checks);
+  }
+
+  res.json(checks);
+});</code></pre>
+
+  <p>With <code>depends_on</code> using <code>condition: service_healthy</code>, Docker Compose will not start your API until the database and Redis are actually ready. No more "connection refused" errors on startup.</p>
+
+  <h2>4. Restart Policies: Surviving Crashes</h2>
+
+  <p>There are four restart policies available:</p>
+
+  <ul>
+    <li><code>no</code> — Never restart (default). Good for development and one-off tasks.</li>
+    <li><code>always</code> — Always restart, even if stopped manually. The container will also restart when the Docker daemon starts.</li>
+    <li><code>unless-stopped</code> — Like <code>always</code>, but does not restart if the container was manually stopped. <strong>This is what you want for most production services.</strong></li>
+    <li><code>on-failure</code> — Only restart if the container exits with a non-zero code. Good for batch jobs.</li>
+  </ul>
+
+  <p>Use <code>unless-stopped</code> for all long-running services. This means your services survive server reboots, OOM kills, and application crashes while still respecting manual <code>docker compose stop</code> commands.</p>
+
+  <h2>5. Secrets Management</h2>
+
+  <p>Never put secrets directly in your docker-compose.yml. Here are three approaches, from simplest to most secure:</p>
+
+  <h3>Level 1: Environment File (Minimum Viable)</h3>
+
+<pre><code># .env (never commit this file)
+DB_PASSWORD=super-secret-password-here
+APP_VERSION=1.2.3
+JWT_SECRET=another-secret</code></pre>
+
+<pre><code># docker-compose.yml
+services:
+  api:
+    env_file:
+      - .env</code></pre>
+
+  <p>Make sure <code>.env</code> is in your <code>.gitignore</code> and <code>.dockerignore</code>. This is acceptable for small deployments but the secrets are visible in <code>docker inspect</code>.</p>
+
+  <h3>Level 2: Docker Secrets</h3>
+
+<pre><code># Create secrets from files
+echo "super-secret-password" | docker secret create db_password -
+
+# docker-compose.yml
+services:
+  api:
+    secrets:
+      - db_password
+    environment:
+      DATABASE_URL: postgresql://app:FILE:/run/secrets/db_password@postgres:5432/appdb
+
+secrets:
+  db_password:
+    external: true</code></pre>
+
+  <p>Docker secrets are stored encrypted and only mounted into the containers that need them. They are available as files at <code>/run/secrets/&lt;name&gt;</code>.</p>
+
+  <h3>Level 3: External Vault</h3>
+
+  <p>For larger deployments, use HashiCorp Vault, AWS Secrets Manager, or similar. Your application fetches secrets at startup rather than receiving them through environment variables.</p>
+
+  <h2>6. Network Isolation</h2>
+
+  <p>The network configuration in our example is deliberate:</p>
+
+<pre><code>networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+    internal: true  # Key: no external access</code></pre>
+
+  <p>The <code>backend</code> network is marked as <code>internal: true</code>. This means containers on this network cannot reach the internet. Your database and Redis are completely isolated — they can only communicate with other containers on the same network.</p>
+
+  <p>The API service is on both networks: it can talk to the database (backend) and receive requests from Nginx (frontend). Nginx is only on the frontend network. This is defense in depth.</p>
+
+  <h2>7. Resource Limits: Preventing Runaway Containers</h2>
+
+  <p>Without resource limits, a memory leak in your API can consume all available RAM and crash every other service on the host:</p>
+
+<pre><code>deploy:
+  resources:
+    limits:
+      cpus: "1.0"      # Max 1 CPU core
+      memory: 512M      # Max 512 MB RAM
+    reservations:
+      cpus: "0.25"      # Guaranteed 0.25 CPU
+      memory: 128M      # Guaranteed 128 MB RAM</code></pre>
+
+  <p>Set limits based on your actual usage patterns. Run your services under load and monitor with <code>docker stats</code> to find the right values. Start generous and tighten over time.</p>
+
+  <p>When a container exceeds its memory limit, Docker kills it with an OOM signal. Combined with <code>restart: unless-stopped</code>, it will come back immediately — containing the blast radius of the leak.</p>
+
+  <h2>8. Logging Configuration</h2>
+
+  <p>Docker's default logging keeps growing until your disk is full. Always configure log rotation:</p>
+
+<pre><code>logging:
+  driver: json-file
+  options:
+    max-size: "10m"   # Rotate after 10 MB
+    max-file: "3"     # Keep 3 rotated files</code></pre>
+
+  <p>This means each service uses at most 30 MB of disk for logs. For production systems processing high volumes, consider shipping logs to an external service:</p>
+
+<pre><code># Ship logs to a remote syslog server
+logging:
+  driver: syslog
+  options:
+    syslog-address: "tcp://logserver:514"
+    tag: "{{.Name}}"</code></pre>
+
+  <p>Or use a logging stack like Loki + Grafana for searchable, centralized logs. The <a href="dev-starter-kit.html">Developer Starter Kit</a> includes a pre-configured Loki setup you can drop into any Compose project.</p>
+
+  <h2>9. Backup Strategy for Volumes</h2>
+
+  <p>Named volumes persist your data, but they are not backed up by default. Here is a simple backup script:</p>
+
+<pre><code>#!/bin/bash
+# backup.sh — Run daily via cron
+set -euo pipefail
+
+BACKUP_DIR="/backups/$(date +%Y-%m-%d)"
+mkdir -p "$BACKUP_DIR"
+
+# Backup PostgreSQL
+docker compose exec -T postgres \
+  pg_dump -U app -d appdb \
+  | gzip &gt; "$BACKUP_DIR/postgres.sql.gz"
+
+# Backup Redis
+docker compose exec -T redis \
+  redis-cli BGSAVE
+sleep 2
+docker cp "$(docker compose ps -q redis)":/data/dump.rdb \
+  "$BACKUP_DIR/redis.rdb"
+
+# Clean backups older than 30 days
+find /backups -maxdepth 1 -type d -mtime +30 -exec rm -rf {} +
+
+echo "Backup completed: $BACKUP_DIR"</code></pre>
+
+  <p>Add this to your crontab: <code>0 3 * * * /opt/app/backup.sh >> /var/log/backup.log 2>&1</code></p>
+
+  <h2>10. Using Multiple Compose Files</h2>
+
+  <p>Keep your base configuration in <code>docker-compose.yml</code> and override for different environments:</p>
+
+<pre><code># docker-compose.override.yml — Development overrides (loaded automatically)
+services:
+  api:
+    build: .
+    volumes:
+      - ./src:/app/src  # Hot reload
+    environment:
+      NODE_ENV: development
+    ports:
+      - "3000:3000"  # Expose directly
+    restart: "no"
+
+  postgres:
+    ports:
+      - "5432:5432"  # Direct access for dev tools</code></pre>
+
+<pre><code># docker-compose.prod.yml — Production overrides
+services:
+  api:
+    image: ghcr.io/yourorg/api:${APP_VERSION}
+    restart: unless-stopped
+    # No volume mounts, no exposed ports except through nginx</code></pre>
+
+  <p>Deploy with: <code>docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d</code></p>
+
+  <h2>11. Zero-Downtime Deployments</h2>
+
+  <p>For updates without downtime, use a rolling update strategy:</p>
+
+<pre><code>#!/bin/bash
+# deploy.sh — Zero-downtime deployment
+set -euo pipefail
+
+NEW_VERSION=$1
+
+echo "Pulling new image version: $NEW_VERSION"
+APP_VERSION=$NEW_VERSION docker compose pull api
+
+echo "Starting new container alongside old one"
+APP_VERSION=$NEW_VERSION docker compose up -d --no-deps --scale api=2 api
+
+echo "Waiting for new container to be healthy..."
+sleep 15
+
+echo "Removing old container"
+APP_VERSION=$NEW_VERSION docker compose up -d --no-deps --scale api=1 api
+
+echo "Deployment complete: $NEW_VERSION"</code></pre>
+
+  <p>This starts a new container, waits for it to pass health checks, then removes the old one. Combined with an Nginx upstream configuration, clients experience zero downtime.</p>
+
+  <h2>12. Monitoring with docker compose</h2>
+
+  <p>Add a monitoring stack directly in your Compose file:</p>
+
+<pre><code>  # ---- Monitoring ----
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - backend
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "127.0.0.1:3001:3000"
+    networks:
+      - backend</code></pre>
+
+  <p>This gives you metrics dashboards without any external dependencies. Monitor container health, resource usage, request rates, and error rates all in one place.</p>
+
+  <h2>Production Checklist</h2>
+
+  <p>Before deploying, verify every item:</p>
+
+  <ul>
+    <li>All services have <code>restart: unless-stopped</code></li>
+    <li>All services have health checks</li>
+    <li>All services have resource limits</li>
+    <li>All services have log rotation configured</li>
+    <li>Secrets are not hardcoded in YAML or Dockerfiles</li>
+    <li>Database ports are not exposed to the host</li>
+    <li>The backend network is <code>internal: true</code></li>
+    <li>Named volumes are used (not bind mounts) for persistent data</li>
+    <li>Backup script is running on a schedule</li>
+    <li>Images use specific version tags, not <code>latest</code></li>
+    <li><code>.env</code> is in <code>.gitignore</code> and <code>.dockerignore</code></li>
+  </ul>
+
+  <div class="article-cta">
+    <p>Need a head start? The <a href="dev-starter-kit.html">Developer Starter Kit 2026</a> includes production-ready Docker Compose files, Nginx configs, backup scripts, and CI/CD pipelines. Over 4000 lines of well-commented, battle-tested configuration files. <a href="dev-starter-kit.html">Get it for 9 euros</a>.</p>
+  </div>
+
+  <div class="related-articles">
+    <h3>Related Articles</h3>
+    <ul>
+      <li><a href="docker-guide-debutant-2026.html">Docker for Beginners: Understanding Containers</a></li>
+      <li><a href="github-actions-ci-cd-2026.html">GitHub Actions CI/CD: From Zero to Auto-Deploy (2026)</a></li>
+      <li><a href="api-rate-limiting-nodejs-2026.html">How to Implement API Rate Limiting in Node.js (2026)</a></li>
+      <li><a href="deployer-app-gratuitement-2026.html">Deploy an App for Free in 2026: Railway, Render, Fly.io</a></li>
+      <li><a href="dev-starter-kit.html">Developer Starter Kit 2026 — 15+ Production-Ready Files</a></li>
+    </ul>
+  </div>
+
+
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 8px; margin: 30px 0; color: white; text-align: center;">
+  <p style="margin: 0 0 15px; font-weight: 600;">Cet article vous a été utile ?</p>
+  <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+    <a href="https://liberapay.com/lucasmdev/" target="_blank" rel="noopener" style="background: #fff; color: #667eea; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">💙 Liberapay</a>
+    <a href="https://www.paypal.me/lucasmdev" target="_blank" rel="noopener" style="background: #fff; color: #667eea; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">💵 PayPal</a>
+    <a href="https://ko-fi.com/lucasmdev" target="_blank" rel="noopener" style="background: #fff; color: #667eea; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px;">☕ Ko-fi</a>
+  </div>
+</div>
+</article>
+</main>
+
+<div class="support-section">
+  <h3>Found this helpful?</h3>
+  <p>If my articles save you time, consider supporting the blog. Every contribution counts!</p>
+  <div class="support-buttons">
+    <a href="https://buymeacoffee.com/lucasmdev" target="_blank" rel="noopener" class="support-btn support-btn--bmc">
+      <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt=""> Buy me a coffee
+    </a>
+    <a href="https://ko-fi.com/lucasmdev" target="_blank" rel="noopener" class="support-btn support-btn--kofi">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"/></svg>
+      Support on Ko-fi
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2026 LucasMdev &middot; <a href="/ressources.html">Resources</a>
+      <a href="mailto:lucasmdev@proton.me">Contact</a> &middot; Some links are affiliate links.</p>
+</footer>
+
+<a href="https://buymeacoffee.com/lucasmdev" target="_blank" rel="noopener" class="bmc-float" aria-label="Buy Me a Coffee">
+  <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt=""> Buy me a coffee
+</a>
+
+</body>
+</html>
