@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Docker Tutorial for Beginners 2026 - Run Your App Anywhere</title>
+    <style>
+        body { font-family: system-ui; max-width: 800px; margin: 40px auto; padding: 20px; }
+        h1 { color: #333; }
+        pre { background: #f5f5f5; padding: 15px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Docker Tutorial for Beginners</h1>
+    
+    <h2>What is Docker?</h2>
+    <p>Docker containers let you package your app + all dependencies. Run anywhere.</p>
+    
+    <h2>Install Docker</h2>
+    <p>Download from docker.com</p>
+    
+    <h2>Create Dockerfile</h2>
+    <pre>FROM node:20
+WORKDIR /app
+COPY . .
+RUN npm install
+CMD ["npm", "start"]
+    </pre>
+    
+    <h2>Build</h2>
+    <pre>docker build -t my-app .
+docker run -p 3000:3000 my-app
+    </pre>
+    
+    <p style="margin-top: 30px;">Learn more: <a href="https://lucasmdevdev.github.io">lucasmdevdev.github.io</a></p>
+</body>
+</html>
