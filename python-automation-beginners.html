@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python Automation Scripts for Beginners</title>
+    <meta name="description" content="Learn Python automation with 5 practical beginner-friendly scripts.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { color: #3776ab; border-bottom: 3px solid #3776ab; }
+        .code { background: #f4f4f4; padding: 10px; margin: 15px 0; }
+    </style>
+</head>
+<body>
+
+<h1>Python Automation Scripts for Beginners</h1>
+
+<h2>1. File Organizer</h2>
+<div class="code">
+<pre>
+import os
+import shutil
+
+def organize_files(folder):
+    for file in os.listdir(folder):
+        ext = os.path.splitext(file)[1]
+        folder_path = os.path.join(folder, ext[1:])
+        os.makedirs(folder_path, exist_ok=True)
+        shutil.move(os.path.join(folder, file), folder_path)
+</pre>
+</div>
+
+<h2>2. Email Sender</h2>
+<div class="code">
+<pre>
+import smtplib
+
+def send_email(to, subject, body):
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login('your_email@gmail.com', 'password')
+    server.sendmail('your_email@gmail.com', to, f'Subject: {subject}\n\n{body}')
+    server.quit()
+</pre>
+</div>
+
+<h2>3. Backup Script</h2>
+<div class="code">
+<pre>
+import shutil
+import datetime
+
+def backup(source, dest):
+    timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+    shutil.copytree(source, f'{dest}/backup_{timestamp}')
+</pre>
+</div>
+
+<hr>
+<p>📖 <a href="/">More Python guides</a></p>
+
+</body>
+</html>

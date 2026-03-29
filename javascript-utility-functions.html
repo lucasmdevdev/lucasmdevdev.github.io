@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>10 JavaScript Utility Functions Every Developer Should Know</title>
+    <meta name="description" content="Essential JavaScript utilities for daily development. Copy-paste ready functions.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { color: #f0db4f; border-bottom: 3px solid #f0db4f; }
+        .snippet { background: #f4f4f4; padding: 10px; margin: 15px 0; border-radius: 4px; }
+        pre { overflow-x: auto; }
+    </style>
+</head>
+<body>
+
+<h1>JavaScript Utility Functions</h1>
+
+<h2>1. Debounce</h2>
+<div class="snippet">
+<pre>
+function debounce(func, delay) {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+}
+</pre>
+</div>
+
+<h2>2. Throttle</h2>
+<div class="snippet">
+<pre>
+function throttle(func, limit) {
+  let inThrottle;
+  return (...args) => {
+    if (!inThrottle) {
+      func(...args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+}
+</pre>
+</div>
+
+<h2>3. Deep Clone</h2>
+<div class="snippet">
+<pre>
+const deepClone = (obj) => JSON.parse(JSON.stringify(obj));
+</pre>
+</div>
+
+<h2>4. Async Retry</h2>
+<div class="snippet">
+<pre>
+async function retry(fn, retries = 3, delay = 1000) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      if (i === retries - 1) throw e;
+      await new Promise(r => setTimeout(r, delay));
+    }
+  }
+}
+</pre>
+</div>
+
+<h2>5. Flatten Array</h2>
+<div class="snippet">
+<pre>
+const flatten = (arr) => arr.reduce((acc, val) => 
+  acc.concat(Array.isArray(val) ? flatten(val) : val), []);
+</pre>
+</div>
+
+<hr>
+<p>💰 <a href="https://ko-fi.com/lucasmdev">Support this content</a></p>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Express.js Best Practices & Performance Tips</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { color: #333; border-bottom: 3px solid #333; }
+    </style>
+</head>
+<body>
+
+<h1>Express.js Best Practices</h1>
+
+<h2>1. Use Middleware Correctly</h2>
+<pre>
+const express = require('express');
+const app = express();
+
+// Order matters
+app.use(express.json());
+app.use(express.static('public'));
+app.use(require('./routes'));
+</pre>
+
+<h2>2. Error Handling Middleware</h2>
+<pre>
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: err.message });
+});
+</pre>
+
+<h2>3. Use Helmet for Security</h2>
+<pre>
+const helmet = require('helmet');
+app.use(helmet());
+</pre>
+
+<hr>
+<p><a href="https://liberapay.com/lucasmdev/">Donate to support</a></p>
+
+</body>
+</html>

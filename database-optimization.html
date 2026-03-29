@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Database Optimization: Indexes, Queries, Caching</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { color: #4CAF50; border-bottom: 3px solid #4CAF50; }
+    </style>
+</head>
+<body>
+
+<h1>Database Optimization Guide</h1>
+
+<h2>1. Create Proper Indexes</h2>
+<pre>
+-- PostgreSQL
+CREATE INDEX idx_user_email ON users(email);
+CREATE INDEX idx_post_created ON posts(created_at DESC);
+</pre>
+
+<h2>2. Query Optimization</h2>
+<p>✅ Select only needed columns</p>
+<p>✅ Use LIMIT for large queries</p>
+<p>✅ Avoid SELECT *</p>
+
+<h2>3. Connection Pooling</h2>
+<p>Reduces connection overhead by 80%+</p>
+
+<hr>
+<p>Database questions? <a href="/">Visit my blog</a></p>
+
+</body>
+</html>
