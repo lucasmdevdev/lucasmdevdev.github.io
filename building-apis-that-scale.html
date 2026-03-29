@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building APIs That Scale: Free Tier Included</title>
+    <meta name="description" content="How to design and deploy APIs that scale to millions of requests on free/cheap infrastructure.">
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { color: #3498db; }
+        .pattern { background: #e3f2fd; padding: 15px; margin: 15px 0; border-left: 4px solid #3498db; }
+        pre { background: #f4f4f4; padding: 10px; overflow-x: auto; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<h1>🚀 Building APIs That Scale (Free & Cheap)</h1>
+
+<h2>Architecture Pattern 1: Stateless Microservices</h2>
+<div class="pattern">
+<p><strong>Why:</strong> Easy to scale horizontally</p>
+<pre>
+Express app with zero state
+↓ (request)
+Deployed on 10+ instances
+↓
+Requests distributed by load balancer
+= No bottleneck
+</pre>
+</div>
+
+<h2>Architecture Pattern 2: Database-as-Bottleneck</h2>
+<div class="pattern">
+<p><strong>Solution:</strong> Cache everything with Redis</p>
+<pre>
+Request → App → Check Cache (Redis) 
+        → Hit: Return instantly (1ms)
+        → Miss: Query DB, cache result, return
+</pre>
+</div>
+
+<h2>Pattern 3: Async/Queue-Based Processing</h2>
+<div class="pattern">
+<p><strong>For long-running tasks:</strong></p>
+<pre>
+POST /process-image
+↓
+Queue job, return immediately
+↓
+Worker processes in background
+↓
+Webhook/polling for result
+</pre>
+</div>
+
+<h2>Free/Cheap Hosting Options</h2>
+<table style="width: 100%; border-collapse: collapse;">
+<tr style="background: #3498db; color: white;">
+<th style="padding: 10px;">Service</th>
+<th style="padding: 10px;">Cost</th>
+<th style="padding: 10px;">Throughput</th>
+</tr>
+<tr style="border-bottom: 1px solid #ddd;">
+<td style="padding: 10px;"><strong>Cloudflare Workers</strong></td>
+<td>Free (with limits)</td>
+<td>100k requests/day</td>
+</tr>
+<tr style="border-bottom: 1px solid #ddd;">
+<td style="padding: 10px;"><strong>Render.com</strong></td>
+<td>€0/month (free tier)</td>
+<td>Moderate</td>
+</tr>
+<tr style="border-bottom: 1px solid #ddd;">
+<td style="padding: 10px;"><strong>Fly.io</strong></td>
+<td>$0 (with free tier)</td>
+<td>High</td>
+</tr>
+<tr>
+<td style="padding: 10px;"><strong>Railway.app</strong></td>
+<td>$5+/month</td>
+<td>Depends on config</td>
+</tr>
+</table>
+
+<hr>
+<p>🎯 <a href="/">Full tutorials on my blog</a></p>
+<p>📊 <a href="https://ko-fi.com/lucasmdev">Support me for more content</a></p>
+
+</body>
+</html>

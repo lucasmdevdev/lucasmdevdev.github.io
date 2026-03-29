@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Scraping Without Getting Blocked (2026)</title>
+    <meta name="description" content="Techniques to avoid getting banned while web scraping: rotating proxies, headers, delays, headless browsers.">
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { color: #e74c3c; }
+        .technique { background: #ffe6e6; padding: 15px; margin: 15px 0; border-left: 4px solid #e74c3c; }
+        pre { background: #f4f4f4; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+
+<h1>🔍 Web Scraping Without Getting Blocked</h1>
+
+<p><strong>March 2026</strong> - Best practices for ethical web scraping</p>
+
+<h2>1. Rotate Your User-Agent</h2>
+<div class="technique">
+<pre>
+const userAgents = [
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64)...',
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X)...',
+  // ... more agents
+];
+
+const randomAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
+const response = await fetch(url, {
+  headers: { 'User-Agent': randomAgent }
+});
+</pre>
+</div>
+
+<h2>2. Add Random Delays</h2>
+<div class="technique">
+<pre>
+async function fetchWithDelay(url) {
+  await new Promise(r => setTimeout(r, Math.random() * 3000 + 1000));
+  return fetch(url);
+}
+</pre>
+</div>
+
+<h2>3. Use Residential Proxies</h2>
+<div class="technique">
+<p>Free: <code>free-proxy-list.com</code></p>
+<p>Paid (recommended): Bright Data, Oxylabs, Smartproxy</p>
+</div>
+
+<h2>4. Use Headless Browsers (Playwright, Puppeteer)</h2>
+<div class="technique">
+<pre>
+const browser = await chromium.launch();
+const page = await browser.newPage();
+await page.goto(url, { waitUntil: 'networkidle' });
+const data = await page.evaluate(() => document.documentElement.innerHTML);
+</pre>
+</div>
+
+<h2>5. Respect robots.txt & Terms of Service</h2>
+<div class="technique">
+<ul>
+<li>✅ Read target site's robots.txt</li>
+<li>✅ Check their terms of service</li>
+<li>✅ Respect rate limits</li>
+<li>✅ Add a User-Agent with contact info</li>
+</ul>
+</div>
+
+<hr>
+<p>💰 Need scraping tools? <a href="https://liberapay.com/lucasmdev/">Support my work</a></p>
+
+</body>
+</html>
