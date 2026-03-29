@@ -357,3 +357,114 @@ footer a { color: var(--accent); text-decoration: none; }
   font-size: .95rem;
 }
 #search-count { margin-top: 8px; font-size: .85rem; color: var(--muted); }
+
+/* ---- Floating Support Button (Buy Me a Coffee) ---- */
+.bmc-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFDD00;
+  color: #000;
+  padding: 12px 20px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: .9rem;
+  box-shadow: 0 4px 16px rgba(255,221,0,.4);
+  transition: background .15s, transform .15s, box-shadow .15s;
+}
+.bmc-float:hover {
+  background: #e6c800;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(255,221,0,.55);
+}
+.bmc-float img {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+@media (max-width: 600px) {
+  .bmc-float { padding: 10px 16px; font-size: .82rem; bottom: 16px; right: 16px; }
+}
+
+/* ---- Support Section (BMC + Ko-fi) ---- */
+.support-section {
+  max-width: var(--max-width);
+  margin: 40px auto 0;
+  padding: 28px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-align: center;
+}
+.support-section h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.support-section p {
+  color: var(--muted);
+  font-size: .95rem;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+.support-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.support-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: .95rem;
+  transition: background .15s, transform .15s;
+}
+.support-btn:hover { transform: translateY(-1px); }
+.support-btn--bmc {
+  background: #FFDD00;
+  color: #000;
+}
+.support-btn--bmc:hover { background: #e6c800; }
+.support-btn--bmc img {
+  width: 18px;
+  height: 18px;
+}
+.support-btn--kofi {
+  background: var(--accent);
+  color: #fff;
+}
+.support-btn--kofi:hover { background: var(--accent-hover); }
+.support-btn--kofi svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+/* ---- Hero Support CTA ---- */
+.hero-support {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 10px 20px;
+  background: #FFDD00;
+  color: #000;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: .9rem;
+  transition: background .15s, transform .15s;
+}
+.hero-support:hover { background: #e6c800; transform: translateY(-1px); }
+.hero-support img { width: 18px; height: 18px; }
